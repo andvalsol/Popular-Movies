@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.pojos.Movie;
@@ -29,6 +30,7 @@ public class MovieNetworkDataSource {
             try {
                 return setupHttConnection(strings[0]);
             } catch (IOException e) {
+                Log.d("MovieE", "The error getting the movies is: " + e.getMessage());
                 return null;
             }
         }
@@ -59,7 +61,7 @@ public class MovieNetworkDataSource {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
