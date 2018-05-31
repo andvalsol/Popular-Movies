@@ -6,4 +6,7 @@
     <string name="top_rated">Top rated</string>
     <string name="most_popular">Most Popular</string>
     <string name="options">Options</string>
+
+    <!--Set the app name as not translatable-->
+    <string name="appName" translatable="false">Cinephile</string>
 </resources>
