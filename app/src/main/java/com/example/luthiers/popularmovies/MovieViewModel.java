@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
-import com.example.luthiers.popularmovies.pojos.Movie;
+import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.repository.MovieRepository;
 
 import java.util.ArrayList;

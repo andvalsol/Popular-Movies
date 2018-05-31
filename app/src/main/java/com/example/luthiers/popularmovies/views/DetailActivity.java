@@ -8,7 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.luthiers.popularmovies.R;
-import com.example.luthiers.popularmovies.pojos.Movie;
+import com.example.luthiers.popularmovies.entities.Movie;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {

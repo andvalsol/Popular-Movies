@@ -1,7 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
 
-import com.example.luthiers.popularmovies.pojos.Movie;
+import com.example.luthiers.popularmovies.entities.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

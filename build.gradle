@@ -25,3 +25,12 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    support = "27.1.1"
+    constraintLayout = "1.1.0"
+    paging = "1.0.0"
+    lifecycle = "1.1.1"
+    picasso = "2.71828"
+    room = "1.1.0"
+}

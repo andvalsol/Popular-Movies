@@ -4,10 +4,9 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.luthiers.popularmovies.utils.Constants;
-import com.example.luthiers.popularmovies.pojos.Movie;
+import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.utils.MovieJson;
 
 import java.io.BufferedReader;
@@ -30,7 +29,6 @@ public class MovieNetworkDataSource {
             try {
                 return setupHttConnection(strings[0]);
             } catch (IOException e) {
-                Log.d("MovieE", "The error getting the movies is: " + e.getMessage());
                 return null;
             }
         }

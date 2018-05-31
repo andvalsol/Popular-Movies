@@ -2,7 +2,7 @@ package com.example.luthiers.popularmovies.repository;
 
 import android.arch.lifecycle.LiveData;
 
-import com.example.luthiers.popularmovies.pojos.Movie;
+import com.example.luthiers.popularmovies.entities.Movie;
 
 import java.util.ArrayList;
 

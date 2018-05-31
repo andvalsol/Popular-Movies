@@ -15,7 +15,7 @@ import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.MovieViewModel;
 import com.example.luthiers.popularmovies.MoviesAdapter;
 import com.example.luthiers.popularmovies.R;
-import com.example.luthiers.popularmovies.pojos.Movie;
+import com.example.luthiers.popularmovies.entities.Movie;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClicked {
     

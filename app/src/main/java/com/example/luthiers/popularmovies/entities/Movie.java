@@ -1,4 +1,12 @@
-package com.example.luthiers.popularmovies.pojos;
+package com.example.luthiers.popularmovies.entities;
+
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 /*
  * The POJO needs:
@@ -8,13 +16,27 @@ package com.example.luthiers.popularmovies.pojos;
  * -> releaseDate --> Type String
  * */
 
-import android.os.Parcel;
-import android.os.Parcelable;
+/*
+ * Since we're using Room, instead of using direct SQLite Database.
+ * Set the Movie as @Entity with the name for the table = movie_table
+ * */
 
+//We're using Parcelable implementation since we pass the movie via intent
+@Entity(tableName = "movie_table")
 public class Movie implements Parcelable {
     
-    private String title, image, overview, releaseDate;
+    //We need to set a unique primary key for every entry, since we are getting the id for every movie we can set it as the primary key
+    @PrimaryKey
+    private int id;
+    
+    private String title;
+    private String image;
+    private String overview;
+    private String releaseDate;
+    
     private Float rating;
+    
+    
     
     public String getTitle() {
         return title;
@@ -65,6 +87,8 @@ public class Movie implements Parcelable {
     }
     
     
+    //Tell Room to ignore this constructor
+    @Ignore
     protected Movie(Parcel in) {
         title = in.readString();
         image = in.readString();
@@ -96,7 +120,7 @@ public class Movie implements Parcelable {
     
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-    
+        
         dest.writeString(title);
         dest.writeString(image);
         dest.writeString(overview);
