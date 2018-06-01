@@ -14,6 +14,7 @@
         android:id="@+id/iv_movie_poster"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:transitionName="movie_poster"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,6 +28,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="255dp" />
 
+    <!--Make the view appear starting from the guideline-->
     <View
         android:layout_width="wrap_content"
         android:layout_height="0dp"

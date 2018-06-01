@@ -1,5 +1,6 @@
 package com.example.luthiers.popularmovies.views;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.luthiers.popularmovies.utils.Constants;
@@ -26,6 +28,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        
+        
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //...
+            }
+        });
         
         //Create an instance of the MoviesAdapter
         MoviesAdapter moviesAdapter = new MoviesAdapter(this);
@@ -52,15 +63,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
             else moviesAdapter.addList(movies);
         });
-    }
-    
-    @Override
-    public void onMovieItemClicked(Movie movie) {
-        //Set the proper intent to open the DetailActivity and send the movie pojo
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("movie", movie);
-        
-        startActivity(intent);
     }
     
     @Override
@@ -93,5 +95,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }
         
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public void onMovieItemClicked(Movie movie, MoviesAdapter.MovieViewHolder holder) {
+        //Set the proper intent to open the DetailActivity and send the movie pojo
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("movie", movie);
+        //Make a transition effect for the shared image (movie poster)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                this, holder.mMoviePosterImage, holder.mMoviePosterImage.getTransitionName()).toBundle());
     }
 }

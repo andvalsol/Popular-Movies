@@ -54,12 +54,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     
     //Create a public interface to handle movie item clicks
     public interface MovieItemClicked {
-        void onMovieItemClicked(Movie movie);
+        void onMovieItemClicked(Movie movie, MovieViewHolder holder);
     }
     
-    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         
-        private ImageView mMoviePosterImage;
+        public ImageView mMoviePosterImage;
         
         MovieViewHolder(View itemView) {
             super(itemView);
@@ -79,7 +79,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             //Get adapter position
             int position = getAdapterPosition();
             
-            mMovieItemClicked.onMovieItemClicked(mMovies.get(position));
+            mMovieItemClicked.onMovieItemClicked(mMovies.get(position), this);
         }
     }
 }
