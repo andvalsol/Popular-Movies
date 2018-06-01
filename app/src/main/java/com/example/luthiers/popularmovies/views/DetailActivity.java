@@ -54,10 +54,11 @@ public class DetailActivity extends AppCompatActivity {
         
         //Create a constraint set
         ConstraintSet constraintSet = new ConstraintSet();
+        
         //Create Change Bounds
         android.support.transition.ChangeBounds changeBounds = new android.support.transition.ChangeBounds();
         changeBounds.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
-        changeBounds.setDuration(1200);
+        changeBounds.setDuration(getResources().getInteger(R.integer.info_animation));
         
         //Set the info arrow click listener
         mMoviePoster.setOnClickListener(v -> {
