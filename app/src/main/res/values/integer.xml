@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="info_animation">150</integer>
+    <!--350ms seems a good timing for the info layout animation, in the Material Design guidelines
+    seems to be encouraged different values for the appearing and disappearing in animation, however
+    it seems that in these case is not necessary-->
+    <integer name="info_animation">350</integer>
 </resources>
