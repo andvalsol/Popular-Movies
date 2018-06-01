@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PopularMovies</string>
     <string name="movie_poster">Movie poster</string>
-    <string name="release_date">"Release Date "</string>
+    <string name="release_date">"Release Date: "</string>
     <string name="error_displaying_movies">Sorry, there was an error displaying the movies</string>
     <string name="top_rated">Top rated</string>
     <string name="most_popular">Most Popular</string>
@@ -9,4 +9,6 @@
 
     <!--Set the app name as not translatable-->
     <string name="appName" translatable="false">Cinephile</string>
+    <string name="movie_image">movie_image</string>
+    <string name="tap_to_info">Tap to show info</string>
 </resources>

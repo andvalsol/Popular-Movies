@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name=".views.DetailActivity"
-            android:theme="@style/Detail" />
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

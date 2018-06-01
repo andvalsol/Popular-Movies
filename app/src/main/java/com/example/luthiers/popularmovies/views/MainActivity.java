@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.luthiers.popularmovies.utils.Constants;
@@ -30,12 +29,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         setContentView(R.layout.activity_main);
         
         
-        
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //...
-            }
+        findViewById(R.id.fab).setOnClickListener(v -> {
+            //...
         });
         
         //Create an instance of the MoviesAdapter
