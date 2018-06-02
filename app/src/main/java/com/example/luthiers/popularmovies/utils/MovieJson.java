@@ -50,7 +50,8 @@ public class MovieJson {
     }
     
     private static String getMoviePosterUrl(String moviePoster) {
-        //Use the recommended size w185
-        return  "http://image.tmdb.org/t/p/w185" + moviePoster;
+        String properImageSize = LatencyGauging.checkLatency();
+        
+        return  "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
     }
 }
