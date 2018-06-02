@@ -19,7 +19,7 @@ public class MovieJson {
     private static final String MOVIE_RATING = "vote_average";
     
     //Get a movie pojo from the json string
-    public static ArrayList<Movie> getMovieFromJson(String jsonResponse) {
+    public static ArrayList<Movie> getMovieFromJson(String jsonResponse, String properImageSize) {
         try {
             JSONObject jsonObject = new JSONObject(jsonResponse);
             JSONArray results = jsonObject.getJSONArray("results");
@@ -32,7 +32,7 @@ public class MovieJson {
     
                 Movie movie = new Movie(
                         jsonMovie.getString(MOVIE_TITLE),
-                        getMoviePosterUrl(jsonMovie.getString(MOVIE_POSTER)),
+                        getMoviePosterUrl(jsonMovie.getString(MOVIE_POSTER), properImageSize),
                         jsonMovie.getString(MOVIE_OVERVIEW),
                         jsonMovie.getString(MOVIE_RELEASE_DATE),
                         (float) jsonMovie.getInt(MOVIE_RATING)
@@ -49,9 +49,7 @@ public class MovieJson {
         }
     }
     
-    private static String getMoviePosterUrl(String moviePoster) {
-        String properImageSize = LatencyGauging.checkLatency();
-        
+    private static String getMoviePosterUrl(String moviePoster, String properImageSize) {
         return  "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
     }
 }

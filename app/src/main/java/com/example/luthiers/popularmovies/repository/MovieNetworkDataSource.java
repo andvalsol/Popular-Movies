@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.entities.Movie;
+import com.example.luthiers.popularmovies.utils.LatencyGauging;
 import com.example.luthiers.popularmovies.utils.MovieJson;
 
 import java.io.BufferedReader;
@@ -17,7 +18,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieNetworkDataSource {
+public class MovieNetworkDataSource extends LatencyGauging {
+    
+    private String mProperImageSize;
+    
+    MovieNetworkDataSource() {
+        mProperImageSize = LatencyGauging.checkLatency();
+    }
     
     public MutableLiveData<ArrayList<Movie>> mMovies = new MutableLiveData<>();
     
@@ -36,7 +43,7 @@ public class MovieNetworkDataSource {
         @Override
         protected void onPostExecute(String s) {
             //Check that the received response is not empty
-            if (s != null) mMovies.setValue(MovieJson.getMovieFromJson(s));
+            if (s != null) mMovies.setValue(MovieJson.getMovieFromJson(s, mProperImageSize));
             else mMovies.setValue(null);
         }
     }
