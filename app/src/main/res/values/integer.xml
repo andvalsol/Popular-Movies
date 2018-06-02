@@ -4,4 +4,5 @@
     seems to be encouraged different values for the appearing and disappearing in animation, however
     it seems that in these case is not necessary-->
     <integer name="info_animation">350</integer>
+    <integer name="rapid_animation">150</integer>
 </resources>

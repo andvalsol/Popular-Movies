@@ -6,7 +6,6 @@ import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.luthiers.popularmovies.utils.Constants;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     
     private String mFilter;//Initialize the filter as most popular by default
     private MovieViewModel mMovieViewModel;
-    private FloatingActionButton mFab;
+    private ImageButton mFab;
     private ConstraintLayout mFiltersLayout;
     
     @Override
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             if (mFiltersLayout.getVisibility() == View.INVISIBLE) doCircularReveal();
             else exitCircularReveal();
         });
+    
+        ProgressBar progressBar = findViewById(R.id.progress_bar);
         
         //Create an instance of the MoviesAdapter
         MoviesAdapter moviesAdapter = new MoviesAdapter(this);
@@ -73,7 +76,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMovieViewModel.getMoviesFromRepository().observe(this, movies -> {
             if (movies == null)
                 Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
-            else moviesAdapter.addList(movies);
+            else {
+                //Remove the progress bar
+                progressBar.setVisibility(View.GONE);
+                
+                //Add the list to the movies adapter
+                moviesAdapter.addList(movies);
+            }
         });
     }
     
@@ -89,14 +98,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         
         //Create the animator for the filter view
         Animator animation = ViewAnimationUtils.createCircularReveal(mFiltersLayout, centerX, centerY, startRadius, endRadius);
-        animation.setDuration(150);
+        animation.setDuration(getResources().getInteger(R.integer.rapid_animation));
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 
-                //Remove the surrounding shadow of the fab
-                mFab.setElevation(0);
+                //Change the image resource of the fab
+                mFab.setImageResource(R.drawable.ic_close);
             }
         });
         
@@ -114,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         float initialRadius = mFiltersLayout.getWidth();
         
         Animator animation = ViewAnimationUtils.createCircularReveal(mFiltersLayout, centerX, centerY, initialRadius, 0);
-        animation.setDuration(150);
+        animation.setDuration(getResources().getInteger(R.integer.rapid_animation));
         // make the view invisible when the animation is done
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -123,8 +132,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 //Set the visibility of the filters layout as View.INVISIBLE
                 mFiltersLayout.setVisibility(View.INVISIBLE);
                 
-                //Add the elevation to the fab again
-                mFab.setElevation(6); //6dp elevation according to the Material Design guidelines
+                //Change the image resource of the fab
+                mFab.setImageResource(R.drawable.ic_filter);
             }
         });
         
