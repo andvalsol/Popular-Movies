@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#69F0AE</color>
     <color name="translucentBlack">#D9000000</color><!-- 85% black -->
     <color name="transparentBlack">#66000000</color><!-- 40% black TODO get the proper transparency for reading white colors-->
     <color name="translucentWhite">#D9FFFFFF</color><!-- 85% white -->
