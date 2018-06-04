@@ -1,15 +1,14 @@
 package com.example.luthiers.popularmovies.entities;
 
-
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 /*
  * The POJO needs:
+ * -> id -> this is for the room database
  * -> title --> Type String
  * -> image --> Type String
  * -> overview --> Type String
@@ -19,13 +18,15 @@ import android.os.Parcelable;
 /*
  * Since we're using Room, instead of using direct SQLite Database.
  * Set the Movie as @Entity with the name for the table = movie_table
+ *
+ * The table should have all the properties from below
  * */
 
 //We're using Parcelable implementation since we pass the movie via intent
 @Entity(tableName = "movie_table")
 public class Movie implements Parcelable {
     
-    //We need to set a unique primary key for every entry, since we are getting the id for every movie we can set it as the primary key
+    //We need to set a unique primary key for every entry, since we are getting the id for every movie (provided by the sever), we can set it as the primary key
     @PrimaryKey
     private int id;
     
@@ -36,7 +37,13 @@ public class Movie implements Parcelable {
     
     private Float rating;
     
+    public int getId() {
+        return id;
+    }
     
+    public void setId(int id) {
+        this.id = id;
+    }
     
     public String getTitle() {
         return title;
@@ -78,12 +85,13 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
     
-    public Movie(String title, String image, String overview, String releaseDate, Float rating) {
+    public Movie(String title, String image, String overview, String releaseDate, Float rating, int movieId) {
         this.title = title;
         this.image = image;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.rating = rating;
+        this.id = movieId;
     }
     
     
@@ -99,6 +107,7 @@ public class Movie implements Parcelable {
         } else {
             rating = in.readFloat();
         }
+        id = in.readInt();
     }
     
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -131,5 +140,6 @@ public class Movie implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeFloat(rating);
         }
+        dest.writeInt(id);
     }
 }

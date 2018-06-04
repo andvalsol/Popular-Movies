@@ -7,14 +7,14 @@ import android.content.Context;
 public class CinephileApplication extends Application {
     
     @SuppressLint("StaticFieldLeak")
-    private static Context mContext;
+    private static Context sContext;
     
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
+        sContext = getApplicationContext();
     }
     
     public static Context getAppContext() {
-        return mContext;
+        return sContext;
     }
 }
