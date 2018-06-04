@@ -5,7 +5,6 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.DetailActivity">
@@ -24,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparentBlack"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_title" />
 
@@ -36,6 +34,7 @@
         android:padding="16dp"
         android:text="@string/tap_to_info"
         android:textColor="@android:color/white"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -46,11 +45,12 @@
         android:id="@+id/tv_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
         android:textColor="@android:color/white"
         android:textSize="28sp"
-        app:layout_constraintRight_toLeftOf="@+id/iv_movie_poster"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -62,8 +62,8 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
         android:textColor="@color/translucentWhite"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
-        app:layout_constraintRight_toLeftOf="@+id/tv_title" />
+        app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
 
     <!--We want the overview and the rating to appear as one layout-->
@@ -71,9 +71,9 @@
         android:id="@+id/layout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster">
+        app:layout_constraintStart_toStartOf="parent">
 
         <!--Sometimes we don't get an overview so start with visibility as gone-->
         <TextView

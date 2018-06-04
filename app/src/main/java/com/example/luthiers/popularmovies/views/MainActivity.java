@@ -5,18 +5,20 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.luthiers.popularmovies.utils.Constants;
@@ -48,14 +50,39 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             if (mFiltersLayout.getVisibility() == View.INVISIBLE) doCircularReveal();
             else exitCircularReveal();
         });
-    
+        
+        //Initialize the progress bar
         ProgressBar progressBar = findViewById(R.id.progress_bar);
+        
+        //Initialize the radio group
+        RadioGroup radioGroup = mFiltersLayout.findViewById(R.id.filter_group);
+        //Add the listener for the radio group
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            //Check which radio button was checked
+            if (checkedId == R.id.rb_top_rated) {
+                //Set the proper value for the filter since the user wants to get the top rated movies
+                mFilter = Constants.TOP_RATED;
+                
+                //Set the filter to the MovieViewModel
+                mMovieViewModel.mFilter.setValue(mFilter);
+                
+            } else if (checkedId == R.id.rb_most_popular) {
+                //Set the proper value for the filter since the user wants to get the most popular movies
+                mFilter = Constants.MOST_POPULAR;
+                
+                //Set the filter to the MovieViewModel
+                mMovieViewModel.mFilter.setValue(mFilter);
+            }
+            
+            //Add the progress bar
+            progressBar.setVisibility(View.VISIBLE);
+        });
         
         //Create an instance of the MoviesAdapter
         MoviesAdapter moviesAdapter = new MoviesAdapter(this);
         
-        //Set the layout manager to the recycler view, it's going to be the GridLayoutManager with 2 columns
-        int NUMBER_OF_COLUMNS = 2;
+        //Set the layout manager to the recycler view, it's going to be the GridLayoutManager
+        int NUMBER_OF_COLUMNS = setGridColumns();
         
         //Set the filter to be most popular as default
         mFilter = Constants.MOST_POPULAR;
@@ -74,9 +101,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMovieViewModel.mFilter.setValue(mFilter);
         //Listen to the movies gotten from the repository
         mMovieViewModel.getMoviesFromRepository().observe(this, movies -> {
-            if (movies == null)
+            if (movies == null) {
+                //Remove the progress bar if its visible
+                if (progressBar.getVisibility() == View.VISIBLE)
+                    progressBar.setVisibility(View.GONE);
+                
+                //Show a text to the user displaying the proper error message
                 Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
-            else {
+            } else {
                 //Remove the progress bar
                 progressBar.setVisibility(View.GONE);
                 
@@ -84,6 +116,23 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 moviesAdapter.addList(movies);
             }
         });
+    }
+    
+    private int setGridColumns() {
+        //Set the maximum size for the grid item
+        int gridItemMaxSize = getResources().getDimensionPixelSize(R.dimen.grid_item_max_size); //Max grid item is set as 160dp
+        
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        
+        //Get the screen width size
+        int screenWidth = displaymetrics.widthPixels;
+        
+        int columns = screenWidth / gridItemMaxSize;
+        
+        //We want to make sure that the are only 3 columns max, since 4 doesn't look well visually
+        return  columns >= 3 ? 3 : columns;
+        
     }
     
     private void doCircularReveal() {
@@ -139,38 +188,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         
         // start the animation
         animation.start();
-    }
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.topRated) {
-            //Set the proper value for the filter since the user wants to get the top rated movies
-            mFilter = Constants.TOP_RATED;
-            
-            //Set the filter to the MovieViewModel
-            mMovieViewModel.mFilter.setValue(mFilter);
-        } else {
-            //Set the proper value for the filter since the user wants to get the most popular movies
-            mFilter = Constants.MOST_POPULAR;
-            
-            //Set the filter to the MovieViewModel
-            mMovieViewModel.mFilter.setValue(mFilter);
-        }
-        
-        return super.onOptionsItemSelected(item);
     }
     
     @Override

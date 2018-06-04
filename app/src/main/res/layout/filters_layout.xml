@@ -10,7 +10,7 @@
     tools:ignore="RtlSymmetry">
 
     <RadioGroup
-        android:id="@+id/filterGroup"
+        android:id="@+id/filter_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
