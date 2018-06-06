@@ -1,29 +1,47 @@
 package com.example.luthiers.popularmovies;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
-import android.arch.lifecycle.ViewModel;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.repository.MovieRepository;
+import com.example.luthiers.popularmovies.repository.network.models.Resource;
+import com.example.luthiers.popularmovies.repository.room.MovieDatabase;
+import com.example.luthiers.popularmovies.utils.AppExecutors;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class MovieViewModel extends ViewModel {
+//We extend from AndroidViewModel since we need to get the Application context to initialize the MovieDatabase
+public class MovieViewModel extends AndroidViewModel {
     
     public MutableLiveData<String> mFilter = new MutableLiveData<>();
     
-    private LiveData<ArrayList<Movie>> mMovies;
-    private MovieRepository mMovieRepository = new MovieRepository();
+    private LiveData<Resource<List<Movie>>> mMovies;
     
-    public LiveData<ArrayList<Movie>> getMoviesFromRepository() {
+    public MovieViewModel(@NonNull Application application) {
+        super(application);
+    }
+    
+    public LiveData<Resource<List<Movie>>> getMoviesFromRepository() {
         /*
         * This allow us to get the movies from the repository if it has not been initialized,
         and if it is initialized, then get the current movies
         * */
         if (mMovies == null) {
-            mMovies = Transformations.switchMap(mFilter, filter -> mMovieRepository.getMoviesFromNetwork(filter));
+            //Init a MovieDatabase instance
+            MovieDatabase movieDatabase = MovieDatabase.getInstance(getApplication().getApplicationContext());
+            
+            //Init a MovieRepository instance
+            //Create an AppExecutors instance, even though the MovieViewModel is created only once, the AppExecutors is a singleton
+            MovieRepository movieRepository = new MovieRepository(movieDatabase.mMovieDao(), AppExecutors.getInstance());
+            
+            //Add a switchMap since we would like to listen to an specific live data when a filter is set
+            mMovies = Transformations.switchMap(mFilter, filter -> movieRepository.getMovies());
         }
         
         return mMovies;

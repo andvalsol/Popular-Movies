@@ -1,13 +1,17 @@
 package com.example.luthiers.popularmovies.repository.room;
 
+import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+
+import com.example.luthiers.popularmovies.entities.Movie;
 
 
 /*
 * Use a singleton pattern for the MovieDatabase
 * */
+@Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     
     private static final Object LOCK = new Object();
@@ -26,4 +30,6 @@ public abstract class MovieDatabase extends RoomDatabase {
         
         return sInstance;
     }
+    
+    public abstract MovieDao mMovieDao();
 }

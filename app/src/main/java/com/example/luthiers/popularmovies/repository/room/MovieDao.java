@@ -1,5 +1,6 @@
 package com.example.luthiers.popularmovies.repository.room;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -15,9 +16,9 @@ import java.util.List;
 public interface MovieDao {
 
     @Query("SELECT * FROM movie_table")
-    List<Movie> getAllMovies();
+    LiveData<List<Movie>> getAllMovies();
     
     @Insert
-    void insertListMovies(List<Movie> movies);
+    Long[] insertListMovies(List<Movie> movies);//Return long so that we can check if the data was successfully saved
     
 }

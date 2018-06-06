@@ -11,11 +11,12 @@ import com.example.luthiers.popularmovies.entities.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
     
     //Create a global movies array list
-    private ArrayList<Movie> mMovies = new ArrayList<>();
+    private List<Movie> mMovies = new ArrayList<>();
     
     private final MovieItemClicked mMovieItemClicked;
     
@@ -45,7 +46,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         return mMovies.size();
     }
     
-    public void addList(ArrayList<Movie> movies) {
+    public void addList(List<Movie> movies) {
         mMovies = movies;
     
         //Notify the adapter the adding of the list

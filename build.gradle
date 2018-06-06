@@ -33,4 +33,5 @@ ext {
     lifecycle = "1.1.1"
     picasso = "2.71828"
     room = "1.1.0"
+    workManager = "1.0.0-alpha02"
 }

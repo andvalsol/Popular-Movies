@@ -5,17 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -26,6 +23,7 @@ import com.example.luthiers.popularmovies.MovieViewModel;
 import com.example.luthiers.popularmovies.MoviesAdapter;
 import com.example.luthiers.popularmovies.R;
 import com.example.luthiers.popularmovies.entities.Movie;
+import com.example.luthiers.popularmovies.utils.MovieNetworkFetching;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClicked {
     
@@ -113,9 +111,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 progressBar.setVisibility(View.GONE);
                 
                 //Add the list to the movies adapter
-                moviesAdapter.addList(movies);
+                moviesAdapter.addList(movies.data);
             }
         });
+        
+        //Set the periodic work request
+        MovieNetworkFetching.scheduleMovieNetworkFetching();
     }
     
     private int setGridColumns() {

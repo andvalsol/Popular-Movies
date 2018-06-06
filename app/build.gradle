@@ -44,6 +44,7 @@ dependencies {
     implementation "android.arch.paging:runtime:${rootProject.paging}"
     implementation "android.arch.lifecycle:extensions:${rootProject.lifecycle}"
     implementation "android.arch.persistence.room:runtime:$rootProject.room"
+    implementation "android.arch.work:work-runtime:$rootProject.workManager"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room"
 
     //Third party implementations
