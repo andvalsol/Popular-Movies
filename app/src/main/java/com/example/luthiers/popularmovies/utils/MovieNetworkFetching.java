@@ -26,12 +26,12 @@ public class MovieNetworkFetching {
     }
     
     private static void initRecurringTask() {
-        int requestTimeInDays = 7; //TODO set this value via Firebase Remote Config
+        int requestTimeInDays = 1; //TODO set this value via Firebase Remote Config
         /* Because not every day there's a movie release, schedule the network request for movies every 7 days,
          * this value can be tested better and set via Firebase Remote Config for better user experience
          * */
         PeriodicWorkRequest.Builder movieNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
+                new PeriodicWorkRequest.Builder(GetMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.MINUTES);
         
         //Setup task constraints
         Constraints movieNetworkFetchingConstraints = setConstraints();

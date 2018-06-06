@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.luthiers.popularmovies.repository.network.models.Status;
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.MovieViewModel;
 import com.example.luthiers.popularmovies.MoviesAdapter;
@@ -99,19 +100,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMovieViewModel.mFilter.setValue(mFilter);
         //Listen to the movies gotten from the repository
         mMovieViewModel.getMoviesFromRepository().observe(this, movies -> {
-            if (movies == null) {
-                //Remove the progress bar if its visible
-                if (progressBar.getVisibility() == View.VISIBLE)
-                    progressBar.setVisibility(View.GONE);
-                
-                //Show a text to the user displaying the proper error message
-                Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
-            } else {
-                //Remove the progress bar
+            //We don't need to check if its loading, since initially we set the progress bar to be visible
+            
+            if (movies.status == Status.SUCCESS) {
+                //Remove the progress bar since we got new data :)
                 progressBar.setVisibility(View.GONE);
                 
                 //Add the list to the movies adapter
                 moviesAdapter.addList(movies.data);
+                
+            } else if (movies.status == Status.ERROR) {
+                //Check if the progress bar is still visible, if it is then remove it
+                if (progressBar.getVisibility() == View.VISIBLE) progressBar.setVisibility(View.GONE);
+                
+                //Show a text to the user displaying the proper error message
+                Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
             }
         });
         
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         int columns = screenWidth / gridItemMaxSize;
         
         //We want to make sure that the are only 3 columns max, since 4 doesn't look well visually
-        return  columns >= 3 ? 3 : columns;
+        return columns >= 3 ? 3 : columns;
         
     }
     

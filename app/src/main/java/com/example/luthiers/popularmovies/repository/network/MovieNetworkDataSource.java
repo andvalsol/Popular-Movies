@@ -1,6 +1,7 @@
 package com.example.luthiers.popularmovies.repository.network;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.luthiers.popularmovies.utils.Constants;
 
@@ -15,6 +16,8 @@ public class MovieNetworkDataSource {
     
     //This method could throw an IOException
     public String getMoviesFromNetwork(String filter) throws IOException {
+    
+        Log.d("NetworkResponse", "The response from the network is: " + setupHttConnection(filter));
         
         //Get the json response
         return setupHttConnection(filter);

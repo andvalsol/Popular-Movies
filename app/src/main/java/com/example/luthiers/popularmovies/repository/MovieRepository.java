@@ -40,7 +40,7 @@ public class MovieRepository {
      * */
     public LiveData<Resource<List<Movie>>> getMovies() {
         return new NetworkBoundResource<List<Movie>, String>(mAppExecutors) {
-    
+            
             @Override
             protected void saveCallResult(@NonNull String jsonMovies) {
                 //Use the MovieUtils.getMoviesFromJsonResponse
@@ -52,7 +52,7 @@ public class MovieRepository {
             
             @Override
             protected boolean shouldFetch(@Nullable List<Movie> movies) {
-                return (movies == null);
+                return (movies == null || movies.isEmpty());
             }
             
             @NonNull
@@ -64,18 +64,23 @@ public class MovieRepository {
             @NonNull
             @Override
             protected LiveData<String> createCall() {
-//                Create a Mutable Live Data
                 MutableLiveData moviesMutableLiveData = new MutableLiveData<String>();
                 
-                try {
-                    moviesMutableLiveData.setValue(mMovieNetworkDataSource.getMoviesFromNetwork(""));
+                //Since we're doing a network request, we need to do via in the diskIO thread
+                mAppExecutors.diskIO().execute(() -> {
+                    //We need to use post value since setValue cannot be invoke on a background thread
+                    try {
+                        moviesMutableLiveData.postValue(mMovieNetworkDataSource.getMoviesFromNetwork(""));
+                        
+                    } catch (IOException e) {
+                        moviesMutableLiveData.postValue(null);
+                        
+                    }
                     
-                    return moviesMutableLiveData;
-                } catch (IOException e) {
-                    moviesMutableLiveData.setValue(null);
-                    
-                    return moviesMutableLiveData;
-                }
+                });
+                //Create a Mutable Live Data
+                
+                return moviesMutableLiveData;
             }
         }.getAsLiveData();
     }

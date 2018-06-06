@@ -101,8 +101,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     protected abstract LiveData<ResultType> loadFromDb();
     
     // Called to create the API call.
-    @NonNull
-    @MainThread
+    @WorkerThread
     protected abstract LiveData<RequestType> createCall();
     
     // Called when the fetch fails. The child class may want to reset components
