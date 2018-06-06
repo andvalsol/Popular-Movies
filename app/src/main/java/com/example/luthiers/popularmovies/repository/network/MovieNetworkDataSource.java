@@ -25,12 +25,12 @@ public class MovieNetworkDataSource {
     
     private static String setupHttConnection(String filter) throws IOException {
         //Get the URL from the buildUrl method
-        URL weatherRequestUrl = buildUrl(filter);
+        URL movieRequestUrl = buildUrl(filter);
         
-        HttpURLConnection urlConnection = (HttpURLConnection) weatherRequestUrl.openConnection();
+        HttpURLConnection urlConnection = (HttpURLConnection) movieRequestUrl.openConnection();
         try {
             //Open a connection using the received url
-            HttpURLConnection con = (HttpURLConnection) weatherRequestUrl.openConnection();
+            HttpURLConnection con = (HttpURLConnection) movieRequestUrl.openConnection();
             // optional default is GET
             con.setRequestMethod("GET");
             //add request header

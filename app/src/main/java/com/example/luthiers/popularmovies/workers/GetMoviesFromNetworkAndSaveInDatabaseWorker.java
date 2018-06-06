@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.repository.network.MovieNetworkDataSource;
 import com.example.luthiers.popularmovies.repository.room.MovieDatabase;
+import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.utils.MovieUtils;
 
 import java.io.IOException;
@@ -25,7 +26,8 @@ public class GetMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
          * The work doing here is going to be in the background by default
          * */
         try {
-            String jsonMovies = mMovieNetworkDataSource.getMoviesFromNetwork("");
+            //Query for the most popular movies
+            String jsonMovies = mMovieNetworkDataSource.getMoviesFromNetwork(Constants.MOST_POPULAR);
             
             /*
             Since we're pre fetching the movies, we don't know the state of the user's network speed at runtime,

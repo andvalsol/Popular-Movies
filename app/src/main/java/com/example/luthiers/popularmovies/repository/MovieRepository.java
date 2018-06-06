@@ -38,7 +38,7 @@ public class MovieRepository {
      * Use the database as single source of truth, because if the repository were to return the response from the web,
      * our UI could potentially show inconsistency
      * */
-    public LiveData<Resource<List<Movie>>> getMovies() {
+    public LiveData<Resource<List<Movie>>> getMovies(String filter) {
         return new NetworkBoundResource<List<Movie>, String>(mAppExecutors) {
             
             @Override
@@ -70,13 +70,11 @@ public class MovieRepository {
                 mAppExecutors.diskIO().execute(() -> {
                     //We need to use post value since setValue cannot be invoke on a background thread
                     try {
-                        moviesMutableLiveData.postValue(mMovieNetworkDataSource.getMoviesFromNetwork(""));
+                        moviesMutableLiveData.postValue(mMovieNetworkDataSource.getMoviesFromNetwork(filter));
                         
                     } catch (IOException e) {
                         moviesMutableLiveData.postValue(null);
-                        
                     }
-                    
                 });
                 //Create a Mutable Live Data
                 

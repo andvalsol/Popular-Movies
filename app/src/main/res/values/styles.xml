@@ -8,9 +8,9 @@
         <!--Set a black window background for better design-->
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowContentTransitions">true</item>
-        <!-- Enable overlapping of exiting and entering activities-->
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <!--Don't allow overlay, this improves much the activity transition fading the toolbar-->
+        <!--TODO find a better solution to avoid overlapping of the toolbar-->
+        <item name="android:windowSharedElementsUseOverlay">false</item>
 
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

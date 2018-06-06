@@ -12,11 +12,10 @@ import com.example.luthiers.popularmovies.CinephileApplication;
  * For better user experience, retrieve the best quality image according to the user's current latency
  * */
 public class LatencyGauging {
-    
     /**
      * @return active network type
      */
-    public static String checkLatency() {
+    public static String getNetworkLatency() {
         //Create a connectivity manager instance from the current Activity, which will always be the Main Activity
         ConnectivityManager connectivityManager = (ConnectivityManager) CinephileApplication.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         TelephonyManager telephonyManager = (TelephonyManager) CinephileApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);

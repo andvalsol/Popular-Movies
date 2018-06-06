@@ -84,6 +84,10 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     @MainThread
     private void updateValue(Resource<ResultType> newValue) {
         //Check that the new value is not the same as the last value from the database
+        if (result.getValue() != newValue) {
+            //Set the new value to the result Mediator Live Data
+            result.setValue(newValue);
+        }
     }
     
     // Called to save the result of the API response into the database

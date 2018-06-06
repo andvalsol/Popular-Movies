@@ -28,10 +28,11 @@ task clean(type: Delete) {
 
 ext {
     support = "27.1.1"
-    constraintLayout = "1.1.0"
+    constraintLayout = "1.1.1"
     paging = "1.0.0"
     lifecycle = "1.1.1"
     picasso = "2.71828"
     room = "1.1.0"
     workManager = "1.0.0-alpha02"
+    dagger2 = "2.15"
 }

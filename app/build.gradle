@@ -47,6 +47,10 @@ dependencies {
     implementation "android.arch.work:work-runtime:$rootProject.workManager"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room"
 
+    //For Dagger2 (dependency injection library)
+    implementation "com.google.dagger:dagger:${rootProject.dagger2}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.dagger2}"
+
     //Third party implementations
     implementation "com.squareup.picasso:picasso:${rootProject.picasso}"
 }

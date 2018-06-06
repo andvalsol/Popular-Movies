@@ -9,13 +9,13 @@ import com.example.luthiers.popularmovies.entities.Movie;
 
 
 /*
-* Use a singleton pattern for the MovieDatabase
-* */
+ * Use a singleton pattern for the MovieDatabase
+ * */
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "movies_database";
+    private static final String DATABASE_NAME = "movies_database.db";
     private static MovieDatabase sInstance;
     
     public static MovieDatabase getInstance(Context context) {
@@ -23,7 +23,6 @@ public abstract class MovieDatabase extends RoomDatabase {
             //Use lock object for multithreading safety
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(), MovieDatabase.class, MovieDatabase.DATABASE_NAME)
-                        .allowMainThreadQueries() //TODO remove this line!
                         .build();
             }
         }

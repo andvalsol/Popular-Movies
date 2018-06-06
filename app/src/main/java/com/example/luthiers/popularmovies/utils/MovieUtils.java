@@ -1,6 +1,8 @@
 package com.example.luthiers.popularmovies.utils;
 
 
+import android.util.Log;
+
 import com.example.luthiers.popularmovies.entities.Movie;
 
 import org.json.JSONArray;
@@ -31,6 +33,8 @@ public class MovieUtils {
             for (int n = 0; n < results.length(); n++) {
                 //Get the each object from the JSON array
                 JSONObject jsonMovie = results.getJSONObject(n);
+    
+                Log.d("UniqueID", "The ids are: " + jsonMovie.getInt(MOVIE_ID));
                 
                 //Create each movie from each json result
                 Movie movie = new Movie(
@@ -51,9 +55,5 @@ public class MovieUtils {
         } catch (JSONException e) {
             return null;
         }
-    }
-    
-    private static String getMoviePosterUrl(String moviePoster, String properImageSize) {
-        return "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
     }
 }

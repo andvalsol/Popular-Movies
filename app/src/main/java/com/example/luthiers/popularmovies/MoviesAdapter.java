@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.luthiers.popularmovies.entities.Movie;
+import com.example.luthiers.popularmovies.utils.LatencyGauging;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,9 +21,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     
     private final MovieItemClicked mMovieItemClicked;
     
+    private String mProperImageSize;
+    
     //Setup a constructor getting the movieItemClicked interface
     public MoviesAdapter(MovieItemClicked movieItemClicked) {
         mMovieItemClicked = movieItemClicked;
+        
+        //Get the proper image size depending on the current network latency as in the creation of the adapter
+        mProperImageSize = LatencyGauging.getNetworkLatency();
     }
     
     @NonNull
@@ -72,15 +78,32 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         
         void bind(Movie movie) {
             //Use Picasso to load each image
-            Picasso.get().load(movie.getImage()).into(mMoviePosterImage);
+            Picasso.get().load(getMoviePosterUrl(movie.getImage(), mProperImageSize)).into(mMoviePosterImage);
         }
         
         @Override
         public void onClick(View v) {
-            //Get adapter position
-            int position = getAdapterPosition();
+            //We need to send the proper url for the image so that when the DetailActivity opens it has the proper image url
+            setProperMoviePosterUrl(getAdapterPosition());
             
-            mMovieItemClicked.onMovieItemClicked(mMovies.get(position), this);
+            //Send now the movie object with the proper movie poster url
+            mMovieItemClicked.onMovieItemClicked(mMovies.get(getAdapterPosition()), this);
         }
+    }
+    
+    private void setProperMoviePosterUrl(int position) {
+        //We need to check that the current movie has not yet the proper movie poster url
+        //Get the movie poster from the image that wants to be clicked
+        String moviePosterId = mMovies.get(position).getImage();
+        
+        if (!moviePosterId.startsWith("http")) {
+            //The current movie item has not the proper movie poster url
+            mMovies.get(position).setImage(getMoviePosterUrl(moviePosterId, mProperImageSize));
+        }
+    }
+    
+    //Set the proper url depending on the properImageSize depending on the cellphone's current network latency
+    private String getMoviePosterUrl(String moviePoster, String properImageSize) {
+        return "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
     }
 }
