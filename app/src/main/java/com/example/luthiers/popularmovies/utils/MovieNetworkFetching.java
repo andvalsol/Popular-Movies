@@ -27,8 +27,6 @@ public class MovieNetworkFetching {
     }
     
     private static void initRecurringTask() {
-        Log.d("Fetching", "initRecurringTask");
-        
         int requestTimeInDays = 7; //TODO set this value via Firebase Remote Config
         /* Because not every day there's a movie release, schedule the network request for movies every 7 days,
          * this value can be tested better and set via Firebase Remote Config for better user experience
