@@ -18,6 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.luthiers.popularmovies.CinephileApplication;
+import com.example.luthiers.popularmovies.dependencyInjection.components.DaggerMainActivityComponent;
+import com.example.luthiers.popularmovies.dependencyInjection.components.MainActivityComponent;
+import com.example.luthiers.popularmovies.dependencyInjection.modules.MainActivityModule;
 import com.example.luthiers.popularmovies.repository.network.models.Status;
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.MovieViewModel;
@@ -26,6 +30,8 @@ import com.example.luthiers.popularmovies.R;
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.utils.MovieNetworkFetching;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClicked {
     
     private String mFilter;//Initialize the filter as most popular by default
@@ -33,10 +39,19 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private ImageButton mFab;
     private ConstraintLayout mFiltersLayout;
     
+    @Inject
+    MoviesAdapter mMoviesAdapter;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        //Setup the dependency injection
+        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
+                .mainActivityModule(new MainActivityModule(this ))
+                .cinephileApplicationComponent(CinephileApplication.get(this).getCinephileApplicationComponent()) //We need to talk to the CinephileApplication class and get the application component
+                .build();
         
         //Initialize the filters layout
         mFiltersLayout = findViewById(R.id.filters_layout);
@@ -77,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             progressBar.setVisibility(View.VISIBLE);
         });
         
-        //Create an instance of the MoviesAdapter
-        MoviesAdapter moviesAdapter = new MoviesAdapter(this);
+        //Create an instance of the MoviesAdapter using Dagger2
+        mainActivityComponent.injectMainActivity(this);
         
         //Set the layout manager to the recycler view, it's going to be the GridLayoutManager
         int NUMBER_OF_COLUMNS = setGridColumns();
@@ -92,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_COLUMNS));
         //Set the moviesAdapter to the recycler view
-        recyclerView.setAdapter(moviesAdapter);
+        recyclerView.setAdapter(mMoviesAdapter);
         
         //Get the movies from the ViewModel
         mMovieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
@@ -107,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 progressBar.setVisibility(View.GONE);
                 
                 //Add the list to the movies adapter
-                moviesAdapter.addList(movies.data);
+                mMoviesAdapter.addList(movies.data);
                 
             } else if (movies.status == Status.ERROR) {
                 //Check if the progress bar is still visible, if it is then remove it
@@ -136,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         
         //We want to make sure that the are only 3 columns max, since 4 doesn't look well visually
         return columns >= 3 ? 3 : columns;
-        
     }
     
     private void doCircularReveal() {

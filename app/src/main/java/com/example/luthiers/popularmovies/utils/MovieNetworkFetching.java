@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import androidx.work.Constraints;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 public class MovieNetworkFetching {
     

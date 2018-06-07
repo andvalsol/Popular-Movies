@@ -108,12 +108,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     @WorkerThread
     protected abstract LiveData<RequestType> createCall();
     
-    // Called when the fetch fails. The child class may want to reset components
-    // like rate limiter.
-    @MainThread
-    protected void onFetchFailed() {
-    }
-    
     // returns a LiveData that represents the resource, implemented
     // in the base class.
     public final LiveData<Resource<ResultType>> getAsLiveData() {

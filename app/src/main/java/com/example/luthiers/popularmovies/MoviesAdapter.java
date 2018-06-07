@@ -14,18 +14,23 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
     
     //Create a global movies array list
     private List<Movie> mMovies = new ArrayList<>();
     
     private final MovieItemClicked mMovieItemClicked;
+    private final Picasso mPicasso;
     
     private String mProperImageSize;
     
     //Setup a constructor getting the movieItemClicked interface
-    public MoviesAdapter(MovieItemClicked movieItemClicked) {
+    @Inject
+    public MoviesAdapter(MovieItemClicked movieItemClicked, Picasso picasso) {
         mMovieItemClicked = movieItemClicked;
+        mPicasso = picasso;
         
         //Get the proper image size depending on the current network latency as in the creation of the adapter
         mProperImageSize = LatencyGauging.getNetworkLatency();
@@ -78,7 +83,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         
         void bind(Movie movie) {
             //Use Picasso to load each image
-            Picasso.get().load(getMoviePosterUrl(movie.getImage(), mProperImageSize)).into(mMoviePosterImage);
+            mPicasso.load(getMoviePosterUrl(movie.getImage(), mProperImageSize)).into(mMoviePosterImage);
         }
         
         @Override
