@@ -43,6 +43,7 @@ public class GetMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
             //Check if the list of movies were successfully saved, if they were return SUCCESS if not return FAILURE
             for (long wasSaved : wereSaved) {
                 if (wasSaved == -1) {
+                    Log.d("Fetching", "Failure");
                     //If one data wasn't saved then set the result as FAILURE, so that if can be tried again later
                     return WorkerResult.FAILURE;
                 }
@@ -52,6 +53,8 @@ public class GetMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
             return WorkerResult.SUCCESS;
             
         } catch (IOException e) {
+            Log.d("Fetching", "Failure");
+    
             //There was an error retrieving the movies
             return WorkerResult.FAILURE;
         }

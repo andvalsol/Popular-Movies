@@ -31,11 +31,11 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             if (shouldFetch(data)) {
                 //We should fetch data since there's no data available in the Database
                 Log.d("Fetch", "should fetch data");
-                fetchFromNetwork(databaseSource);
+//                fetchFromNetwork(databaseSource);
             } else {
                 Log.d("Fetch", "shouldn't fetch data");
-                result.addSource(databaseSource, newData ->
-                        updateValue(Resource.success(newData)));
+//                result.addSource(databaseSource, newData ->
+//                        updateValue(Resource.success(newData)));
             }
         });
     }

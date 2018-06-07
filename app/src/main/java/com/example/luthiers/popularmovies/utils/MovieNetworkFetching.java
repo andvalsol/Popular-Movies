@@ -1,5 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
+import android.util.Log;
+
 import com.example.luthiers.popularmovies.workers.GetMoviesFromNetworkAndSaveInDatabaseWorker;
 
 import java.util.concurrent.TimeUnit;
@@ -25,12 +27,14 @@ public class MovieNetworkFetching {
     }
     
     private static void initRecurringTask() {
-        int requestTimeInDays = 1; //TODO set this value via Firebase Remote Config
+        Log.d("Fetching", "initRecurringTask");
+        
+        int requestTimeInDays = 7; //TODO set this value via Firebase Remote Config
         /* Because not every day there's a movie release, schedule the network request for movies every 7 days,
          * this value can be tested better and set via Firebase Remote Config for better user experience
          * */
         PeriodicWorkRequest.Builder movieNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.MINUTES);
+                new PeriodicWorkRequest.Builder(GetMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
         
         //Setup task constraints
         Constraints movieNetworkFetchingConstraints = setConstraints();
@@ -52,7 +56,7 @@ public class MovieNetworkFetching {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             return new Constraints.Builder()
                     .setRequiresStorageNotLow(true) //This make the app not making making any network requests if the storage space is low
-                    .setRequiresDeviceIdle(true) //This ensures that the work wont run if the device is in active use
+//                    .setRequiresDeviceIdle(true) //This ensures that the work wont run if the device is in active use
                     .build();
         } else {
             return new Constraints.Builder()
