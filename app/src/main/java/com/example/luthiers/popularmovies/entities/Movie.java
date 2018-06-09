@@ -13,6 +13,8 @@ import android.os.Parcelable;
  * -> image --> Type String
  * -> overview --> Type String
  * -> releaseDate --> Type String
+ * -> topRatedRank --> Type int
+ * -> mostPopularRank --> Type int
  * */
 
 /*
