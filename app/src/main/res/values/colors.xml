@@ -4,7 +4,7 @@
     <color name="colorAccent">#69F0AE</color>
     <color name="sixtyBlack">#99000000</color>
     <color name="translucentBlack">#D9000000</color><!-- 85% black -->
-    <color name="transparentBlack">#66000000</color><!-- 40% black TODO get the proper transparency for reading white colors-->
+    <color name="transparentBlack">#66000000</color><!-- 40% black -->
     <color name="translucentWhite">#D9FFFFFF</color><!-- 85% white -->
     <color name="yellow">#FFEA00</color>
 </resources>

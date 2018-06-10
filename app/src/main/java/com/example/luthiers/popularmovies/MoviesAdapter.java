@@ -111,6 +111,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         }
     }
     
+    /*
+    * This method is used because we store in the database just the moviePoster id, and we need the movie poster url.
+    * We don't store the url since the have to pass the image height, that height should be set depending on the
+    * user's network latency
+    * */
     private void setProperMoviePosterUrl(int position) {
         //We need to check that the current movie has not yet the proper movie poster url
         //Get the movie poster from the image that wants to be clicked
