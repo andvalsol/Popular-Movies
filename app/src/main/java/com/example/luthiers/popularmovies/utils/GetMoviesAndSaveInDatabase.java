@@ -1,33 +1,23 @@
-package com.example.luthiers.popularmovies.workers;
+package com.example.luthiers.popularmovies.utils;
 
-import android.support.annotation.NonNull;
+import android.content.Context;
 import android.util.Log;
 
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.repository.network.MovieNetworkDataSource;
 import com.example.luthiers.popularmovies.repository.room.MovieDatabase;
-import com.example.luthiers.popularmovies.utils.Constants;
-import com.example.luthiers.popularmovies.utils.MovieUtils;
 
 import java.io.IOException;
 import java.util.List;
 
 import androidx.work.Worker;
 
-public class GetMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
+public class GetMoviesAndSaveInDatabase {
     
-    private MovieNetworkDataSource mMovieNetworkDataSource = new MovieNetworkDataSource();
-    
-    @NonNull
-    @Override
-    public WorkerResult doWork() {
-        Log.d("Fetching", "GetMoviesFromNetworkAndSaveInDatabaseWorker doWork()...");
-        /*
-         * The work doing here is going to be in the background by default
-         * */
+    public static Worker.WorkerResult getMoviesAndSaveInDatabase(MovieNetworkDataSource movieNetworkDataSource, String filter, Context context) {
+        //Query for the most popular movies
         try {
-            //Query for the most popular movies
-            String jsonMovies = mMovieNetworkDataSource.getMoviesFromNetwork(Constants.MOST_POPULAR);
+            String jsonMovies = movieNetworkDataSource.getMoviesFromNetwork(Constants.TOP_RATED);
             
             /*
             Since we're pre fetching the movies, we don't know the state of the user's network speed at runtime,
@@ -38,25 +28,24 @@ public class GetMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
             List<Movie> movies = MovieUtils.getMoviesFromJsonResponse(jsonMovies);
             
             //Insert the list of movies in the database
-            Long[] wereSaved = MovieDatabase.getInstance(getApplicationContext()).mMovieDao().insertListMovies(movies);
+            Long[] wereSaved = MovieDatabase.getInstance(context).mMovieDao().insertListMovies(movies);
             
             //Check if the list of movies were successfully saved, if they were return SUCCESS if not return FAILURE
             for (long wasSaved : wereSaved) {
                 if (wasSaved == -1) {
                     Log.d("Fetching", "Failure");
                     //If one data wasn't saved then set the result as FAILURE, so that if can be tried again later
-                    return WorkerResult.FAILURE;
+                    return Worker.WorkerResult.FAILURE;
                 }
             }
             
             //The list of movies were successfully saved
-            return WorkerResult.SUCCESS;
-            
+            return Worker.WorkerResult.SUCCESS;
         } catch (IOException e) {
             Log.d("Fetching", "Failure");
-    
+            
             //There was an error retrieving the movies
-            return WorkerResult.FAILURE;
+            return Worker.WorkerResult.FAILURE;
         }
     }
 }

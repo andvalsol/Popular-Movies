@@ -1,8 +1,6 @@
 package com.example.luthiers.popularmovies.utils;
 
-import android.util.Log;
-
-import com.example.luthiers.popularmovies.workers.GetMoviesFromNetworkAndSaveInDatabaseWorker;
+import com.example.luthiers.popularmovies.workers.GetPopularMoviesFromNetworkAndSaveInDatabaseWorker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,25 +18,34 @@ public class MovieNetworkFetching {
         if (sInitialized) return;
         
         //Set the recurring task
-        initRecurringTask();
+        initRecurringTasks();
         
         //Set the MovieNetworkFetching class as initialized
         sInitialized = true;
     }
     
-    private static void initRecurringTask() {
+    private static void initRecurringTasks() {
         int requestTimeInDays = 7; //TODO set this value via Firebase Remote Config
         /* Because not every day there's a movie release, schedule the network request for movies every 7 days,
          * this value can be tested better and set via Firebase Remote Config for better user experience
          * */
-        PeriodicWorkRequest.Builder movieNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
+        PeriodicWorkRequest.Builder mostPopularMoviesNetworkFetchingBuilder =
+                new PeriodicWorkRequest.Builder(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
+        
+        PeriodicWorkRequest.Builder topRatedMoviesNetworkFetchingBuilder =
+                new PeriodicWorkRequest.Builder(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
         
         //Setup task constraints
         Constraints movieNetworkFetchingConstraints = setConstraints();
         
-        //Create the GetMoviesFromNetworkAndSaveInDatabaseWorker instance
-        PeriodicWorkRequest movieNetworkFetchingWorkRequest = movieNetworkFetchingBuilder
+        //Create the GetPopularMoviesFromNetworkAndSaveInDatabaseWorker instance
+        PeriodicWorkRequest mostPopularMoviesNetworkFetchingWorkRequest = mostPopularMoviesNetworkFetchingBuilder
+                .setConstraints(movieNetworkFetchingConstraints)
+                .addTag(MOVIE_NETWORK_JOB_TAG)
+                .build();
+        
+        //Create the GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker instance
+        PeriodicWorkRequest topRatedMoviesNetworkFetchingWorkRequest = topRatedMoviesNetworkFetchingBuilder
                 .setConstraints(movieNetworkFetchingConstraints)
                 .addTag(MOVIE_NETWORK_JOB_TAG)
                 .build();
@@ -46,7 +53,8 @@ public class MovieNetworkFetching {
         //Initialize a WorkManager
         WorkManager moviesWorkManager = WorkManager.getInstance();
         //Add the movieNetworkFetchingWorkRequest to the queue
-        moviesWorkManager.enqueue(movieNetworkFetchingWorkRequest);
+        moviesWorkManager.enqueue(mostPopularMoviesNetworkFetchingWorkRequest);
+        moviesWorkManager.enqueue(topRatedMoviesNetworkFetchingWorkRequest);
     }
     
     private static Constraints setConstraints() {

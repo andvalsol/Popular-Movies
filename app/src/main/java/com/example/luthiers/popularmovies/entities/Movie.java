@@ -13,8 +13,8 @@ import android.os.Parcelable;
  * -> image --> Type String
  * -> overview --> Type String
  * -> releaseDate --> Type String
- * -> topRatedRank --> Type int
- * -> mostPopularRank --> Type int
+ * -> popularity --> Type Float
+ * -> rating --> Type Float
  * */
 
 /*
@@ -32,12 +32,14 @@ public class Movie implements Parcelable {
     @PrimaryKey
     private int id;
     
+    
     private String title;
     private String image;
     private String overview;
     private String releaseDate;
     
     private Float rating;
+    private Float popularity;
     
     public int getId() {
         return id;
@@ -87,12 +89,13 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
     
-    public Movie(int id, String title, String image, String overview, String releaseDate, Float rating) {
+    public Movie(int id, String title, String image, String overview, String releaseDate, Float rating, Float popularity) {
         this.title = title;
         this.image = image;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.rating = rating;
+        this.popularity = popularity;
         this.id = id;
     }
     
@@ -109,6 +112,7 @@ public class Movie implements Parcelable {
         } else {
             rating = in.readFloat();
         }
+        popularity = in.readFloat();
         id = in.readInt();
     }
     
@@ -142,6 +146,7 @@ public class Movie implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeFloat(rating);
         }
+        dest.writeFloat(popularity);
         dest.writeInt(id);
     }
 }

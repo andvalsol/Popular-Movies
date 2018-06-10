@@ -11,6 +11,7 @@ import com.example.luthiers.popularmovies.repository.network.NetworkBoundResourc
 import com.example.luthiers.popularmovies.repository.network.models.Resource;
 import com.example.luthiers.popularmovies.repository.room.MovieDao;
 import com.example.luthiers.popularmovies.utils.AppExecutors;
+import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.utils.MovieUtils;
 
 import java.io.IOException;
@@ -58,7 +59,9 @@ public class MovieRepository {
             @NonNull
             @Override
             protected LiveData<List<Movie>> loadFromDb() {
-                return mMovieDao.getAllMovies();
+                //Load from the database depending on the desired filter
+                if (filter.equals(Constants.MOST_POPULAR)) return mMovieDao.getMostPopularMovies();
+                else return mMovieDao.getTopRatedMoviest();
             }
             
             @NonNull
