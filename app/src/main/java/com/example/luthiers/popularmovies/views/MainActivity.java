@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         
         //Setup the dependency injection
         MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
-                .mainActivityModule(new MainActivityModule(this ))
+                .mainActivityModule(new MainActivityModule(this))
                 .cinephileApplicationComponent(CinephileApplication.get(this).getCinephileApplicationComponent()) //We need to talk to the CinephileApplication class and get the application component
                 .build();
         
@@ -126,10 +126,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 
             } else if (movies.status == Status.ERROR) {
                 //Check if the progress bar is still visible, if it is then remove it
-                if (progressBar.getVisibility() == View.VISIBLE) progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
                 
                 //Show a text to the user displaying the proper error message
                 Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
+            } else {
+                //Should be loading
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
         

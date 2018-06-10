@@ -89,6 +89,14 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
     
+    public Float getPopularity() {
+        return popularity;
+    }
+    
+    public void setPopularity(Float popularity) {
+        this.popularity = popularity;
+    }
+    
     public Movie(int id, String title, String image, String overview, String releaseDate, Float rating, Float popularity) {
         this.title = title;
         this.image = image;

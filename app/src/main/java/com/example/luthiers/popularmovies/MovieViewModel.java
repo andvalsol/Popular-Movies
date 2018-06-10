@@ -41,7 +41,7 @@ public class MovieViewModel extends AndroidViewModel {
             MovieRepository movieRepository = new MovieRepository(movieDatabase.mMovieDao(), AppExecutors.getInstance());
             
             //Add a switchMap since we would like to listen to an specific live data when a filter is set
-            mMovies = Transformations.switchMap(mFilter, filter -> movieRepository.getMovies(filter));
+            mMovies = Transformations.switchMap(mFilter, movieRepository::getMovies);
         }
         
         return mMovies;

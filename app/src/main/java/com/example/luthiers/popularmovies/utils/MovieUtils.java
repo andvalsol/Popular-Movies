@@ -20,6 +20,7 @@ public class MovieUtils {
     private static final String MOVIE_OVERVIEW = "overview";
     private static final String MOVIE_RELEASE_DATE = "release_date";
     private static final String MOVIE_RATING = "vote_average";
+    private static final String MOVIE_POPULARITY = "popularity";
     private static final String MOVIE_ID = "id";
     
     //Get a movie pojo from the json string
@@ -43,7 +44,8 @@ public class MovieUtils {
                         jsonMovie.getString(MOVIE_POSTER),
                         jsonMovie.getString(MOVIE_OVERVIEW),
                         jsonMovie.getString(MOVIE_RELEASE_DATE),
-                        (float) jsonMovie.getInt(MOVIE_RATING)
+                        (float) jsonMovie.getInt(MOVIE_RATING),
+                        (float) jsonMovie.getInt(MOVIE_POPULARITY)
                 );
                 
                 //Add the object to the movies array list

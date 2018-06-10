@@ -16,11 +16,11 @@ import java.util.List;
 @Dao
 public interface MovieDao {
 
-    @Query("SELECT * FROM movie_table ORDER BY popularity ASC")
+    @Query("SELECT * FROM movie_table ORDER BY popularity DESC") //Get the most popular movies in descending order
     LiveData<List<Movie>> getMostPopularMovies();
     
-    @Query("SELECT * FROM movie_table ORDER BY rating ASC")
-    LiveData<List<Movie>> getTopRatedMoviest();
+    @Query("SELECT * FROM movie_table ORDER BY rating DESC") //Get the top rated movies in descending order
+    LiveData<List<Movie>> getTopRatedMovies();
     
     @Insert(onConflict = OnConflictStrategy.REPLACE) //We want to replace, since the rating can be updated
     Long[] insertListMovies(List<Movie> movies);//Return long so that we can check if the data was successfully saved

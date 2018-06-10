@@ -1,6 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
 import com.example.luthiers.popularmovies.workers.GetPopularMoviesFromNetworkAndSaveInDatabaseWorker;
+import com.example.luthiers.popularmovies.workers.GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +34,7 @@ public class MovieNetworkFetching {
                 new PeriodicWorkRequest.Builder(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
         
         PeriodicWorkRequest.Builder topRatedMoviesNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
+                new PeriodicWorkRequest.Builder(GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
         
         //Setup task constraints
         Constraints movieNetworkFetchingConstraints = setConstraints();

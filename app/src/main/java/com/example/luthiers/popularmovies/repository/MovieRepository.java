@@ -61,7 +61,7 @@ public class MovieRepository {
             protected LiveData<List<Movie>> loadFromDb() {
                 //Load from the database depending on the desired filter
                 if (filter.equals(Constants.MOST_POPULAR)) return mMovieDao.getMostPopularMovies();
-                else return mMovieDao.getTopRatedMoviest();
+                else return mMovieDao.getTopRatedMovies();
             }
             
             @NonNull
