@@ -1,6 +1,8 @@
 package com.example.luthiers.popularmovies;
 
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,11 +59,24 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         return mMovies.size();
     }
     
-    public void addList(List<Movie> movies) {
-        mMovies = movies;
+    public void updateAdapter(List<Movie> newMovies) {
+        //In order to update the adapter in the most efficient way we're going to use DiffUtil
+        final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                new DiffUtilCallback(mMovies, newMovies), true); //We pass the detectMoves as true since we want to add animations to the moving cards
+        
+        //Update movies
+        updateList(newMovies);
+        
+        result.dispatchUpdatesTo(this);
+    }
     
-        //Notify the adapter the adding of the list
-        notifyDataSetChanged();
+    @MainThread
+    private void updateList(List<Movie> newMovies) {
+        //Clear the mMovies list
+        mMovies.clear();
+        
+        //Set the newMovies list to the mMovies instance
+        mMovies = newMovies;
     }
     
     //Create a public interface to handle movie item clicks
@@ -110,5 +125,39 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     //Set the proper url depending on the properImageSize depending on the cellphone's current network latency
     private String getMoviePosterUrl(String moviePoster, String properImageSize) {
         return "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
+    }
+    
+    private class DiffUtilCallback extends DiffUtil.Callback {
+        
+        private final List<Movie> mOldMovies;
+        private final List<Movie> mNewMovies;
+        
+        DiffUtilCallback(List<Movie> oldMovies, List<Movie> newMovies) {
+            mOldMovies = oldMovies;
+            mNewMovies = newMovies;
+        }
+        
+        @Override
+        public int getOldListSize() {
+            return mOldMovies.size();
+        }
+        
+        @Override
+        public int getNewListSize() {
+            return mNewMovies.size();
+        }
+        
+        @Override
+        public boolean areItemsTheSame(int oldMoviePosition, int newMoviePosition) {
+            //Compare the items using the id
+            return mOldMovies.get(oldMoviePosition).getId() == mNewMovies.get(newMoviePosition).getId();
+        }
+        
+        @Override
+        public boolean areContentsTheSame(int oldMoviePosition, int newMoviePosition) {
+            //This method is called when areItemsTheSame() returns true
+            //Since we never change the content of the items, then it will always be true
+            return true;
+        }
     }
 }

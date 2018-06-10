@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 progressBar.setVisibility(View.GONE);
                 
                 //Add the list to the movies adapter
-                mMoviesAdapter.addList(movies.data);
+                mMoviesAdapter.updateAdapter(movies.data);
                 
             } else if (movies.status == Status.ERROR) {
                 //Check if the progress bar is still visible, if it is then remove it
