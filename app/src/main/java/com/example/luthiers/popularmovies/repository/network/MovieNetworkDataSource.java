@@ -52,11 +52,12 @@ public class MovieNetworkDataSource {
     
     private static URL buildUrl(String filter) {
         //Format the requestUrl
-        String MOVIE_DB_API_REQUEST = "https://api.themoviedb.org/3";
-        String MOVIE_API_KEY = "?&api_key=" + Constants.MOVIE_DB_API_KEY;
+        final String MOVIE_DB_API_REQUEST = "https://api.themoviedb.org/3/movie/";
+        final String MOVIE_API_KEY = "?&api_key=" + Constants.MOVIE_DB_API_KEY;
+        final String QUERY_PARAMS = "&language=en-US&page=1";
         
         //Setup the requestUrl
-        String requestUrl = MOVIE_DB_API_REQUEST + filter + MOVIE_API_KEY;
+        String requestUrl = MOVIE_DB_API_REQUEST + filter + MOVIE_API_KEY + QUERY_PARAMS;
         
         Uri builtUri = Uri.parse(requestUrl)
                 .buildUpon()

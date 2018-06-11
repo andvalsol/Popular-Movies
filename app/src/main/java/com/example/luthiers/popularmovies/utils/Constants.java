@@ -1,5 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
+import com.example.luthiers.popularmovies.BuildConfig;
+
 /*
 * Use static final variables instead of ENUMs for better overall performance
 * */
@@ -16,9 +18,9 @@ public final class Constants {
     public static final String MEDIUM_RES_IMAGE_SIZE = "w185";
     public static final String HIGH_RES_IMAGE_SIZE = "w500";
     
-    public static final String MOVIE_DB_API_KEY = ""; //TODO add the proper API Key
-    public static final String MOST_POPULAR = "/discover/movie?sort_by=popularity.desc";
-    public static final String TOP_RATED = " /discover/movie/?certification_country=US&sort_by=vote_average.desc";
+    public static final String MOVIE_DB_API_KEY = BuildConfig.API_KEY;
+    public static final String MOST_POPULAR = "popular";
+    public static final String TOP_RATED = " top_rated";
 
     private Constants() {
         //Set private constructor to prevent instantiation of this class
