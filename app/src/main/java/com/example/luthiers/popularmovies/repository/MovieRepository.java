@@ -19,9 +19,9 @@ import java.util.List;
 
 public class MovieRepository {
     
-    private MovieDao mMovieDao;
-    private MovieNetworkDataSource mMovieNetworkDataSource;
-    private AppExecutors mAppExecutors;
+    private final MovieDao mMovieDao;
+    private final MovieNetworkDataSource mMovieNetworkDataSource;
+    private final AppExecutors mAppExecutors;
     
     public MovieRepository(MovieDao movieDao, AppExecutors appExecutors) {
         //Initialize the mMovieDao instance

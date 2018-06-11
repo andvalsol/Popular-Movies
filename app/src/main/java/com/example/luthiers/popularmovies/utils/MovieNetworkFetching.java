@@ -59,11 +59,11 @@ public class MovieNetworkFetching {
     }
     
     private static Constraints setConstraints() {
-        //setRequiresDeviceIdle requires SDK>= M
+        //setRequiresDeviceIdle requires SDK>= M, therefore check for the current os version of the device
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             return new Constraints.Builder()
                     .setRequiresStorageNotLow(true) //This make the app not making making any network requests if the storage space is low
-//                    .setRequiresDeviceIdle(true) //This ensures that the work wont run if the device is in active use
+                    .setRequiresDeviceIdle(true) //This ensures that the work wont run if the device is in active use
                     .build();
         } else {
             return new Constraints.Builder()

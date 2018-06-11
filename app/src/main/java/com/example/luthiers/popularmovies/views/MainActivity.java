@@ -116,23 +116,27 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         //Listen to the movies gotten from the repository
         mMovieViewModel.getMoviesFromRepository().observe(this, movies -> {
             //We don't need to check if its loading, since initially we set the progress bar to be visible
+    
+            switch (movies.status) {
+                case SUCCESS:
+                    //Remove the progress bar since we got new data :)
+                    progressBar.setVisibility(View.GONE);
             
-            if (movies.status == Status.SUCCESS) {
-                //Remove the progress bar since we got new data :)
-                progressBar.setVisibility(View.GONE);
-                
-                //Add the list to the movies adapter
-                mMoviesAdapter.updateAdapter(movies.data);
-                
-            } else if (movies.status == Status.ERROR) {
-                //Check if the progress bar is still visible, if it is then remove it
-                progressBar.setVisibility(View.GONE);
-                
-                //Show a text to the user displaying the proper error message
-                Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
-            } else {
-                //Should be loading
-                progressBar.setVisibility(View.VISIBLE);
+                    //Add the list to the movies adapter
+                    mMoviesAdapter.updateAdapter(movies.data);
+            
+                    break;
+                case ERROR:
+                    //Check if the progress bar is still visible, if it is then remove it
+                    progressBar.setVisibility(View.GONE);
+            
+                    //Show a text to the user displaying the proper error message
+                    Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    //Should be loading
+                    progressBar.setVisibility(View.VISIBLE);
+                    break;
             }
         });
         

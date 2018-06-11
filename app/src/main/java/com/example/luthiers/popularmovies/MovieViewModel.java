@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.example.luthiers.popularmovies.entities.Movie;
@@ -19,7 +18,7 @@ import java.util.List;
 //We extend from AndroidViewModel since we need to get the Application context to initialize the MovieDatabase
 public class MovieViewModel extends AndroidViewModel {
     
-    public MutableLiveData<String> mFilter = new MutableLiveData<>();
+    public final MutableLiveData<String> mFilter = new MutableLiveData<>();
     
     private LiveData<Resource<List<Movie>>> mMovies;
     

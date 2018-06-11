@@ -10,7 +10,7 @@ import androidx.work.Worker;
 
 public class GetPopularMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
     
-    private MovieNetworkDataSource mMovieNetworkDataSource = new MovieNetworkDataSource();
+    private final MovieNetworkDataSource mMovieNetworkDataSource = new MovieNetworkDataSource();
     
     @NonNull
     @Override

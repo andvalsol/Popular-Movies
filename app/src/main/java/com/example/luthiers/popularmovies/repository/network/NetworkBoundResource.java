@@ -14,7 +14,7 @@ import com.example.luthiers.popularmovies.utils.AppExecutors;
 public abstract class NetworkBoundResource<ResultType, RequestType> {
     
     private final MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
-    private AppExecutors mAppExecutors;
+    private final AppExecutors mAppExecutors;
     
     @MainThread
     protected NetworkBoundResource(AppExecutors appExecutors) {

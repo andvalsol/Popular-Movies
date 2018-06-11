@@ -2,8 +2,6 @@ package com.example.luthiers.popularmovies.dependencyInjection.modules;
 
 import com.example.luthiers.popularmovies.MoviesAdapter;
 import com.example.luthiers.popularmovies.dependencyInjection.scopes.MainActivityScope;
-import com.example.luthiers.popularmovies.views.MainActivity;
-import com.squareup.picasso.Picasso;
 
 import dagger.Module;
 import dagger.Provides;

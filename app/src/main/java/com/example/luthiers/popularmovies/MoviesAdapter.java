@@ -26,7 +26,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     private final MovieItemClicked mMovieItemClicked;
     private final Picasso mPicasso;
     
-    private String mProperImageSize;
+    private final String mProperImageSize;
     
     //Setup a constructor getting the movieItemClicked interface
     @Inject
@@ -86,7 +86,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         
-        public ImageView mMoviePosterImage;
+        public final ImageView mMoviePosterImage;
         
         MovieViewHolder(View itemView) {
             super(itemView);
