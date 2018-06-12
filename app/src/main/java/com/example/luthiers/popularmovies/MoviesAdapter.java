@@ -84,7 +84,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         void onMovieItemClicked(Movie movie, MovieViewHolder holder);
     }
     
-    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    protected class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         
         public final ImageView mMoviePosterImage;
         

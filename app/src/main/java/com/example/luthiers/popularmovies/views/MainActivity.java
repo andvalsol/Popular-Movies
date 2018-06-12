@@ -22,7 +22,6 @@ import com.example.luthiers.popularmovies.CinephileApplication;
 import com.example.luthiers.popularmovies.dependencyInjection.components.DaggerMainActivityComponent;
 import com.example.luthiers.popularmovies.dependencyInjection.components.MainActivityComponent;
 import com.example.luthiers.popularmovies.dependencyInjection.modules.MainActivityModule;
-import com.example.luthiers.popularmovies.repository.network.models.Status;
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.MovieViewModel;
 import com.example.luthiers.popularmovies.MoviesAdapter;

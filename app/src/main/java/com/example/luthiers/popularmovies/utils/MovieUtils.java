@@ -31,11 +31,10 @@ public class MovieUtils {
             
             ArrayList<Movie> movies = new ArrayList<>();
             
+            //Iterate over the results (JSONArray)
             for (int n = 0; n < results.length(); n++) {
                 //Get the each object from the JSON array
                 JSONObject jsonMovie = results.getJSONObject(n);
-    
-                Log.d("UniqueID", "The ids are: " + jsonMovie.getInt(MOVIE_ID));
                 
                 //Create each movie from each json result
                 Movie movie = new Movie(

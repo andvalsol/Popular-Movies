@@ -16,6 +16,6 @@ public class GetPopularMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
     @Override
     public WorkerResult doWork() {
         
-        return GetMoviesAndSaveInDatabase.getMoviesAndSaveInDatabase(mMovieNetworkDataSource, Constants.TOP_RATED, getApplicationContext());
+        return GetMoviesAndSaveInDatabase.getMoviesAndSaveInDatabase(mMovieNetworkDataSource, Constants.MOST_POPULAR, getApplicationContext());
     }
 }
