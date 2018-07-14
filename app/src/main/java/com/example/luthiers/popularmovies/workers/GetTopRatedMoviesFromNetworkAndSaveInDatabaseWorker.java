@@ -11,8 +11,6 @@ import androidx.work.Worker;
 
 public class GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker extends Worker {
     
-    private final MovieNetworkDataSource mMovieNetworkDataSource = new MovieNetworkDataSource();
-    
     @NonNull
     @Override
     public WorkerResult doWork() {
@@ -21,6 +19,6 @@ public class GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker extends Worker 
          * The work doing here is going to be in the background by default
          * */
         
-        return GetMoviesAndSaveInDatabase.getMoviesAndSaveInDatabase(mMovieNetworkDataSource, Constants.TOP_RATED, getApplicationContext());
+        return GetMoviesAndSaveInDatabase.getMoviesAndSaveInDatabase(Constants.TOP_RATED, getApplicationContext());
     }
 }

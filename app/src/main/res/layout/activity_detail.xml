@@ -65,6 +65,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_title"
         app:layout_constraintRight_toLeftOf="@+id/tv_title" />
 
+    <ImageView
+        android:id="@+id/iv_movie_trailer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/movie_trailer"
+        app:layout_constraintRight_toLeftOf="@+id/tv_release_date"
+        app:layout_constraintTop_toBottomOf="@id/tv_release_date"
+        app:srcCompat="@drawable/ic_movie_trailer" />
+
 
     <!--We want the overview and the rating to appear as one layout-->
     <android.support.constraint.ConstraintLayout

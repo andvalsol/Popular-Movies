@@ -1,5 +1,7 @@
 package com.example.luthiers.popularmovies.views;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.transition.TransitionManager;
@@ -14,6 +16,9 @@ import android.widget.TextView;
 
 import com.example.luthiers.popularmovies.R;
 import com.example.luthiers.popularmovies.entities.Movie;
+import com.example.luthiers.popularmovies.repository.network.GetMovieTrailer;
+import com.example.luthiers.popularmovies.utils.AppExecutors;
+import com.example.luthiers.popularmovies.utils.MovieUtils;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
@@ -22,6 +27,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView mMoviePoster;
     private RatingBar mRatingBar;
     private ConstraintLayout mConstraintLayout;
+    private ImageView mMovieTrailerButton;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +46,9 @@ public class DetailActivity extends AppCompatActivity {
         //Initialize the rating bar
         mRatingBar = findViewById(R.id.rb_movie_rating);
         
-        //Initialize the image view
+        //Initialize the image views
         mMoviePoster = findViewById(R.id.iv_movie_poster);
+        mMovieTrailerButton = findViewById(R.id.iv_movie_trailer);
         
         //Check if we have received an intent
         if (getIntent().getExtras() != null) {
@@ -50,6 +57,9 @@ public class DetailActivity extends AppCompatActivity {
             
             //Populate UI with the movie POJO gotten from the Main Activity
             populateUI(movie);
+            
+            //Get the trailers from the selected movie
+            getMovieTrailers(movie.getId());
         }
         
         //Create a constraint set
@@ -65,6 +75,20 @@ public class DetailActivity extends AppCompatActivity {
             //Show the information layout
             setInfoLayoutVisibility(constraintSet, changeBounds);
         });
+    }
+    
+    private void getMovieTrailers(int movieId) {
+        new GetMovieTrailer(movieTrailerKey -> {
+            if (!movieTrailerKey.isEmpty()) {
+                mMovieTrailerButton.setOnClickListener(v -> launchYouTubeTrailer(movieTrailerKey));
+                
+                mMovieTrailerButton.setVisibility(View.VISIBLE);
+            }
+        }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movieId);
+    }
+    
+    private void launchYouTubeTrailer(String movieTrailerKey) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MovieUtils.getMovieTrailer(movieTrailerKey))));
     }
     
     private void setInfoLayoutVisibility(ConstraintSet constraintSet, android.support.transition.ChangeBounds changeBounds) {

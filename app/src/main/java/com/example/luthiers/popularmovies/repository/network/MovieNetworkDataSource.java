@@ -1,7 +1,6 @@
 package com.example.luthiers.popularmovies.repository.network;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.luthiers.popularmovies.utils.Constants;
 
@@ -15,18 +14,23 @@ import java.net.URL;
 public class MovieNetworkDataSource {
     
     //This method could throw an IOException
-    public String getMoviesFromNetwork(String filter) throws IOException {
-    
-        Log.d("NetworkResponse", "The response from the network is: " + setupHttConnection(filter));
+    public static String getMoviesFromNetwork(String filter) throws IOException {
+        //Get the URL from the buildUrl method
+        URL movieRequestUrl = buildUrl(requestUrlForMovies(filter));
         
         //Get the json response
-        return setupHttConnection(filter);
+        return setupHttConnection(movieRequestUrl);
+    }
+
+    //This method could throw an IOException
+    public static String getMovieTrailerKey(int movieId) throws IOException {
+        URL trailerRequestUrl = buildUrl(requestUrlForMovieTrailer(movieId));
+        
+        //Get the json response
+        return  setupHttConnection(trailerRequestUrl);
     }
     
-    private static String setupHttConnection(String filter) throws IOException {
-        //Get the URL from the buildUrl method
-        URL movieRequestUrl = buildUrl(filter);
-        
+    private static String setupHttConnection(URL movieRequestUrl) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) movieRequestUrl.openConnection();
         try {
             //Open a connection using the received url
@@ -50,15 +54,21 @@ public class MovieNetworkDataSource {
         }
     }
     
-    private static URL buildUrl(String filter) {
+    private static String requestUrlForMovieTrailer(int movieId) {
+        return "https://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=" + Constants.MOVIE_DB_API_KEY;
+    }
+    
+    private static String requestUrlForMovies(String filter) {
         //Format the requestUrl
         final String MOVIE_DB_API_REQUEST = "https://api.themoviedb.org/3/movie/";
         final String MOVIE_API_KEY = "?&api_key=" + Constants.MOVIE_DB_API_KEY;
         final String QUERY_PARAMS = "&language=en-US&page=1";
-        
+    
         //Setup the requestUrl
-        String requestUrl = MOVIE_DB_API_REQUEST + filter + MOVIE_API_KEY + QUERY_PARAMS;
-        
+        return (MOVIE_DB_API_REQUEST + filter + MOVIE_API_KEY + QUERY_PARAMS);
+    }
+    
+    private static URL buildUrl(String requestUrl) {
         Uri builtUri = Uri.parse(requestUrl)
                 .buildUpon()
                 .build();

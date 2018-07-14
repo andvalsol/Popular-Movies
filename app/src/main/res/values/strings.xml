@@ -13,4 +13,5 @@
     <string name="movie_image" translatable="false">movie_image</string>
     <string name="tap_to_info">Tap to show info</string>
     <string name="fab">Floating action button</string>
+    <string name="movie_trailer">Movie trailer</string>
 </resources>

@@ -13,10 +13,10 @@ import androidx.work.Worker;
 
 public class GetMoviesAndSaveInDatabase {
     
-    public static Worker.WorkerResult getMoviesAndSaveInDatabase(MovieNetworkDataSource movieNetworkDataSource, String filter, Context context) {
+    public static Worker.WorkerResult getMoviesAndSaveInDatabase(String filter, Context context) {
         //Query for the most popular movies
         try {
-            String jsonMovies = movieNetworkDataSource.getMoviesFromNetwork(filter);
+            String jsonMovies = MovieNetworkDataSource.getMoviesFromNetwork(filter);
             
             /*
             Since we're pre fetching the movies, we don't know the state of the user's network speed at runtime,

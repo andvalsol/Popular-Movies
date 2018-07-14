@@ -53,6 +53,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/iv_movie_trailer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/movie_trailer"
+        android:padding="24dp"
+        app:layout_constraintStart_toStartOf="@id/tv_release_date"
+        app:layout_constraintTop_toBottomOf="@id/tv_release_date"
+        app:srcCompat="@drawable/ic_movie_trailer" />
 
     <!--Sometimes the release date is not available, set the visibility of the text view to gone-->
     <TextView

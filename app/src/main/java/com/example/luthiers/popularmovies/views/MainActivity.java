@@ -94,9 +94,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         //Create an instance of the MoviesAdapter using Dagger2
         mainActivityComponent.injectMainActivity(this);
         
-        //Set the layout manager to the recycler view, it's going to be the GridLayoutManager
-        int NUMBER_OF_COLUMNS = setGridColumns();
-        
         //Set the filter to be most popular as default
         mFilter = Constants.MOST_POPULAR;
         
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         RecyclerView recyclerView = findViewById(R.id.rv_movies);
         //The size of each item from the recycler view won't change, so set this value to be true, to let recycler view do some optimizations
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_COLUMNS));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, setGridColumns()));
         //Set the moviesAdapter to the recycler view
         recyclerView.setAdapter(mMoviesAdapter);
         

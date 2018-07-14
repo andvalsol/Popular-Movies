@@ -1,8 +1,5 @@
 package com.example.luthiers.popularmovies.utils;
 
-
-import android.util.Log;
-
 import com.example.luthiers.popularmovies.entities.Movie;
 
 import org.json.JSONArray;
@@ -22,6 +19,9 @@ public class MovieUtils {
     private static final String MOVIE_RATING = "vote_average";
     private static final String MOVIE_POPULARITY = "popularity";
     private static final String MOVIE_ID = "id";
+    
+    //For movie trailer
+    private static final String MOVIE_TRAILER_KEY = "key";
     
     //Get a movie pojo from the json string
     public static List<Movie> getMoviesFromJsonResponse(String jsonResponse) {
@@ -56,5 +56,25 @@ public class MovieUtils {
         } catch (JSONException e) {
             return null;
         }
+    }
+    
+    public static String getMovieTrailerKeyFromJsonResource(String jsonMovieTrailer) {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonMovieTrailer);
+            //Get the json array from the results found from the json response
+            JSONArray results = jsonObject.getJSONArray("results");
+    
+            //Get the first object from the json array
+            JSONObject firstArray = results.getJSONObject(0);
+            return firstArray.getString(MOVIE_TRAILER_KEY);
+            
+        } catch (JSONException e) {
+            return "";
+        }
+    }
+    
+    public static String getMovieTrailer(String keyId) {
+        return "https://www.youtube.com/watch?v=" + keyId;
     }
 }
