@@ -15,9 +15,11 @@ import java.util.List;
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder> {
     
     private List<Review> mReviews;
+    private ReviewsInterface mReviewsInterface;
     
-    public ReviewsAdapter(List<Review> reviews) {
+    public ReviewsAdapter(List<Review> reviews, ReviewsInterface reviewsInterface) {
         mReviews = reviews;
+        mReviewsInterface = reviewsInterface;
     }
     
     @NonNull
@@ -49,11 +51,17 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     
             mtvAuthor = itemView.findViewById(R.id.tv_review_author);
             mtvReview = itemView.findViewById(R.id.tv_review_content);
+            
+            itemView.setOnClickListener(v -> mReviewsInterface.recyclerViewOnClick());
         }
         
         void bind(Review review) {
             mtvReview.setText(review.getReview());
             mtvAuthor.setText(review.getAuthor());
         }
+    }
+    
+    public interface ReviewsInterface {
+        void recyclerViewOnClick();
     }
 }

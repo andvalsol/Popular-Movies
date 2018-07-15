@@ -5,6 +5,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.DetailActivity">
@@ -59,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/movie_trailer"
-        android:padding="24dp"
+        android:padding="16dp"
         app:layout_constraintStart_toStartOf="@id/tv_watch_reviews"
         app:layout_constraintTop_toBottomOf="@id/tv_watch_reviews"
         app:srcCompat="@drawable/ic_movie_trailer" />
@@ -79,11 +80,12 @@
         android:id="@+id/tv_watch_reviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:text="@string/watch_movie_reviews"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
         android:textColor="@color/translucentWhite"
         android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tv_release_date"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
 
 

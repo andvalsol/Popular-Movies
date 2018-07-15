@@ -2,17 +2,13 @@ package com.example.luthiers.popularmovies.views;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.constraint.Group;
-import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -29,12 +25,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.ReviewsInterface {
     
-    private TextView mTitle, mOverview, mReleaseDate, mTapToShowInfo, mMovieReviews;
+    private TextView mTitle, mOverview, mReleaseDate, mMovieReviews;
     private ImageView mMoviePoster;
     private RatingBar mRatingBar;
-    private ConstraintLayout mConstraintLayout;
     private ImageView mMovieTrailerButton;
     private Group mGroup;
     private RecyclerView mReviews;
@@ -42,17 +37,13 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_detail_alt);
         
         //Initialize the text views
         mTitle = findViewById(R.id.tv_title);
         mOverview = findViewById(R.id.tv_overview);
         mReleaseDate = findViewById(R.id.tv_release_date);
-        mTapToShowInfo = findViewById(R.id.tv_tap);
         mMovieReviews = findViewById(R.id.tv_watch_reviews);
-        
-        //Initialize the constraint layout from the activity_detail
-        mConstraintLayout = findViewById(R.id.layout);
         
         mGroup = findViewById(R.id.group);
         
@@ -78,32 +69,29 @@ public class DetailActivity extends AppCompatActivity {
             //Get the movie reviews
             getMovieReviews(movie.getId());
         }
-        
-        //Create a constraint set
-        ConstraintSet constraintSet = new ConstraintSet();
-        
-        //Create Change Bounds
-        android.support.transition.ChangeBounds changeBounds = new android.support.transition.ChangeBounds();
-        changeBounds.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
-        changeBounds.setDuration(getResources().getInteger(R.integer.info_animation));
-        
-        //Set the info arrow click listener
-        mMoviePoster.setOnClickListener(v -> {
-            //Show the information layout
-            setInfoLayoutVisibility(constraintSet, changeBounds);
-        });
     }
     
     private void getMovieReviews(int movieId) {
         new GetReviewsFromMovieAsyncTask(movieReviews -> {
             if (movieReviews != null && movieReviews.size() > 0) {
-                mMovieReviews.setVisibility(View.VISIBLE);
-                setMovieReviews(movieReviews);
+                setInfoLayoutVisibility();
                 
-                //Initialize click listeners
-                mMovieReviews.setOnClickListener(v -> showReviews());
+                
+                //Set the visibility of the WATCH MOVIE REVIEWS text view to VISIBLE
+                mMovieReviews.setVisibility(View.VISIBLE);
+                
+                //Set the movie review to the correspond recycler view
+                setMovieReviews(movieReviews);
             }
         }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movieId);
+    }
+    
+    private void setInfoLayoutVisibility() {
+        mMovieReviews.setOnClickListener(v -> {
+            //Hide the information of the movie and make the reviews visible to the user
+            mGroup.setVisibility(View.GONE);
+            mReviews.setVisibility(View.VISIBLE);
+        });
     }
     
     private void setMovieReviews(List<Review> reviews) {
@@ -111,7 +99,7 @@ public class DetailActivity extends AppCompatActivity {
         mReviews.setHasFixedSize(true);
         mReviews.setLayoutManager(new LinearLayoutManager(this));
         //Set the moviesAdapter to the recycler view
-        mReviews.setAdapter(new ReviewsAdapter(reviews));
+        mReviews.setAdapter(new ReviewsAdapter(reviews, this::recyclerViewOnClick));
     }
     
     private void getMovieTrailers(int movieId) {
@@ -126,33 +114,6 @@ public class DetailActivity extends AppCompatActivity {
     
     private void launchYouTubeTrailer(String movieTrailerKey) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MovieUtils.getMovieTrailer(movieTrailerKey))));
-    }
-    
-    private void showReviews() {
-        if (mGroup.getVisibility() == View.VISIBLE) {
-            mGroup.setVisibility(View.GONE);
-            
-            mReviews.setVisibility(View.VISIBLE);
-        } else {
-            mGroup.setVisibility(View.VISIBLE);
-            
-            mReviews.setVisibility(View.INVISIBLE);
-        }
-    }
-    
-    private void setInfoLayoutVisibility(ConstraintSet constraintSet, android.support.transition.ChangeBounds changeBounds) {
-        if (mTapToShowInfo.getVisibility() == View.VISIBLE) {
-            //Show the info layout
-            //Clone the activity_detail_alt layout to the constraint set
-            constraintSet.clone(this, R.layout.activity_detail_alt);
-        } else {
-            //Hide the info layout
-            //Clone the activity_detail layout to the constraint set
-            constraintSet.clone(this, R.layout.activity_detail);
-        }
-        
-        TransitionManager.beginDelayedTransition(mConstraintLayout, changeBounds);
-        constraintSet.applyTo(mConstraintLayout);
     }
     
     private void populateUI(Movie movie) {
@@ -179,5 +140,13 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.get()
                 .load(movie.getImage())
                 .into(mMoviePoster);
+    }
+    
+    @Override
+    public void recyclerViewOnClick() {
+        Log.d("Reviews", "mReviews recycler view being clicked");
+        //Hide the movie reviews and make the information of the movie visible to the user
+        mReviews.setVisibility(View.GONE);
+        mGroup.setVisibility(View.VISIBLE);
     }
 }
