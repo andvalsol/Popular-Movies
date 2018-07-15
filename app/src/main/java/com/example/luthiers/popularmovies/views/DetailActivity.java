@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.constraint.Group;
 import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
@@ -15,19 +18,26 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.luthiers.popularmovies.R;
+import com.example.luthiers.popularmovies.adapter.ReviewsAdapter;
 import com.example.luthiers.popularmovies.entities.Movie;
-import com.example.luthiers.popularmovies.repository.network.GetMovieTrailer;
+import com.example.luthiers.popularmovies.entities.Review;
+import com.example.luthiers.popularmovies.repository.network.GetMovieTrailerAsyncTask;
+import com.example.luthiers.popularmovies.repository.network.GetReviewsFromMovieAsyncTask;
 import com.example.luthiers.popularmovies.utils.AppExecutors;
 import com.example.luthiers.popularmovies.utils.MovieUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class DetailActivity extends AppCompatActivity {
     
-    private TextView mTitle, mOverview, mReleaseDate, mTapToShowInfo;
+    private TextView mTitle, mOverview, mReleaseDate, mTapToShowInfo, mMovieReviews;
     private ImageView mMoviePoster;
     private RatingBar mRatingBar;
     private ConstraintLayout mConstraintLayout;
     private ImageView mMovieTrailerButton;
+    private Group mGroup;
+    private RecyclerView mReviews;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +49,14 @@ public class DetailActivity extends AppCompatActivity {
         mOverview = findViewById(R.id.tv_overview);
         mReleaseDate = findViewById(R.id.tv_release_date);
         mTapToShowInfo = findViewById(R.id.tv_tap);
+        mMovieReviews = findViewById(R.id.tv_watch_reviews);
         
         //Initialize the constraint layout from the activity_detail
         mConstraintLayout = findViewById(R.id.layout);
+        
+        mGroup = findViewById(R.id.group);
+        
+        mReviews = findViewById(R.id.rv_movie_reviews);
         
         //Initialize the rating bar
         mRatingBar = findViewById(R.id.rb_movie_rating);
@@ -60,6 +75,8 @@ public class DetailActivity extends AppCompatActivity {
             
             //Get the trailers from the selected movie
             getMovieTrailers(movie.getId());
+            //Get the movie reviews
+            getMovieReviews(movie.getId());
         }
         
         //Create a constraint set
@@ -77,8 +94,28 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
     
+    private void getMovieReviews(int movieId) {
+        new GetReviewsFromMovieAsyncTask(movieReviews -> {
+            if (movieReviews != null && movieReviews.size() > 0) {
+                mMovieReviews.setVisibility(View.VISIBLE);
+                setMovieReviews(movieReviews);
+                
+                //Initialize click listeners
+                mMovieReviews.setOnClickListener(v -> showReviews());
+            }
+        }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movieId);
+    }
+    
+    private void setMovieReviews(List<Review> reviews) {
+        //The size of each item from the recycler view won't change, so set this value to be true, to let recycler view do some optimizations
+        mReviews.setHasFixedSize(true);
+        mReviews.setLayoutManager(new LinearLayoutManager(this));
+        //Set the moviesAdapter to the recycler view
+        mReviews.setAdapter(new ReviewsAdapter(reviews));
+    }
+    
     private void getMovieTrailers(int movieId) {
-        new GetMovieTrailer(movieTrailerKey -> {
+        new GetMovieTrailerAsyncTask(movieTrailerKey -> {
             if (!movieTrailerKey.isEmpty()) {
                 mMovieTrailerButton.setOnClickListener(v -> launchYouTubeTrailer(movieTrailerKey));
                 
@@ -89,6 +126,18 @@ public class DetailActivity extends AppCompatActivity {
     
     private void launchYouTubeTrailer(String movieTrailerKey) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MovieUtils.getMovieTrailer(movieTrailerKey))));
+    }
+    
+    private void showReviews() {
+        if (mGroup.getVisibility() == View.VISIBLE) {
+            mGroup.setVisibility(View.GONE);
+            
+            mReviews.setVisibility(View.VISIBLE);
+        } else {
+            mGroup.setVisibility(View.VISIBLE);
+            
+            mReviews.setVisibility(View.INVISIBLE);
+        }
     }
     
     private void setInfoLayoutVisibility(ConstraintSet constraintSet, android.support.transition.ChangeBounds changeBounds) {
@@ -110,7 +159,6 @@ public class DetailActivity extends AppCompatActivity {
         mTitle.setText(movie.getTitle());
         //Sometimes we don't receive an overview, so check if its not empty
         if (!movie.getOverview().equals("")) {
-            Log.d("MovieItem", "The overview is: " + movie.getOverview());
             mOverview.setVisibility(View.VISIBLE);
             mOverview.setText(movie.getOverview());
         }
@@ -118,7 +166,6 @@ public class DetailActivity extends AppCompatActivity {
         //Sometimes the movie has not been rated yet
         if (movie.getRating() != 0.0) {
             //Divide the rating by 2 since the max rating is 10 and we use a max rating of 5
-            Log.d("MovieItem", "The rating is: " + movie.getRating());
             mRatingBar.setVisibility(View.VISIBLE);
             mRatingBar.setRating(movie.getRating() / 2);
         }

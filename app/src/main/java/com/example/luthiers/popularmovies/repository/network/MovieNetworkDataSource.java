@@ -21,13 +21,23 @@ public class MovieNetworkDataSource {
         //Get the json response
         return setupHttConnection(movieRequestUrl);
     }
-
+    
+    //This method could throw an IOException
+    public static String getReviewsFromMovie(int movieId) throws IOException {
+        //Get the URL from the buildUrl method
+        URL reviewsRequestUrl = buildUrl(requestReviewsFromMovie(movieId));
+        
+        //Get the json response
+        return setupHttConnection(reviewsRequestUrl);
+    }
+    
     //This method could throw an IOException
     public static String getMovieTrailerKey(int movieId) throws IOException {
+        //Get the URL from the buildUrl method
         URL trailerRequestUrl = buildUrl(requestUrlForMovieTrailer(movieId));
         
         //Get the json response
-        return  setupHttConnection(trailerRequestUrl);
+        return setupHttConnection(trailerRequestUrl);
     }
     
     private static String setupHttConnection(URL movieRequestUrl) throws IOException {
@@ -54,6 +64,10 @@ public class MovieNetworkDataSource {
         }
     }
     
+    private static String requestReviewsFromMovie(int movieId) {
+        return "https://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=" + Constants.MOVIE_DB_API_KEY;
+    }
+    
     private static String requestUrlForMovieTrailer(int movieId) {
         return "https://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=" + Constants.MOVIE_DB_API_KEY;
     }
@@ -63,7 +77,7 @@ public class MovieNetworkDataSource {
         final String MOVIE_DB_API_REQUEST = "https://api.themoviedb.org/3/movie/";
         final String MOVIE_API_KEY = "?&api_key=" + Constants.MOVIE_DB_API_KEY;
         final String QUERY_PARAMS = "&language=en-US&page=1";
-    
+        
         //Setup the requestUrl
         return (MOVIE_DB_API_REQUEST + filter + MOVIE_API_KEY + QUERY_PARAMS);
     }

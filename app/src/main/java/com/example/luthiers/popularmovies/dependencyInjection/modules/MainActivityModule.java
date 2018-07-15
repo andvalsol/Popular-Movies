@@ -1,6 +1,6 @@
 package com.example.luthiers.popularmovies.dependencyInjection.modules;
 
-import com.example.luthiers.popularmovies.MoviesAdapter;
+import com.example.luthiers.popularmovies.adapter.MoviesAdapter;
 import com.example.luthiers.popularmovies.dependencyInjection.scopes.MainActivityScope;
 
 import dagger.Module;

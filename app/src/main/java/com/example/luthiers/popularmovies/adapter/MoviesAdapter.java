@@ -1,4 +1,4 @@
-package com.example.luthiers.popularmovies;
+package com.example.luthiers.popularmovies.adapter;
 
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.luthiers.popularmovies.R;
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.utils.LatencyGauging;
 import com.squareup.picasso.Picasso;

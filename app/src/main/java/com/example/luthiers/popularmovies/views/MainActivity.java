@@ -24,7 +24,7 @@ import com.example.luthiers.popularmovies.dependencyInjection.components.MainAct
 import com.example.luthiers.popularmovies.dependencyInjection.modules.MainActivityModule;
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.MovieViewModel;
-import com.example.luthiers.popularmovies.MoviesAdapter;
+import com.example.luthiers.popularmovies.adapter.MoviesAdapter;
 import com.example.luthiers.popularmovies.R;
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.utils.MovieNetworkFetching;

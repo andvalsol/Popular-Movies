@@ -60,8 +60,8 @@
         android:layout_marginTop="16dp"
         android:contentDescription="@string/movie_trailer"
         android:padding="24dp"
-        app:layout_constraintStart_toStartOf="@id/tv_release_date"
-        app:layout_constraintTop_toBottomOf="@id/tv_release_date"
+        app:layout_constraintStart_toStartOf="@id/tv_watch_reviews"
+        app:layout_constraintTop_toBottomOf="@id/tv_watch_reviews"
         app:srcCompat="@drawable/ic_movie_trailer" />
 
     <!--Sometimes the release date is not available, set the visibility of the text view to gone-->
@@ -74,6 +74,17 @@
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="@+id/tv_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+    <TextView
+        android:id="@+id/tv_watch_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/watch_movie_reviews"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+        android:textColor="@color/translucentWhite"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="@+id/tv_release_date"
+        app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
 
 
     <!--We want the overview and the rating to appear as one layout-->
@@ -118,5 +129,17 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.Group
+        android:id="@+id/group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="layout2,tv_watch_reviews,tv_release_date,iv_movie_trailer,tv_title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movie_reviews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
 
 </android.support.constraint.ConstraintLayout>

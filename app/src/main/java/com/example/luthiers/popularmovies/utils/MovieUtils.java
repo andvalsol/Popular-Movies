@@ -1,6 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
 import com.example.luthiers.popularmovies.entities.Movie;
+import com.example.luthiers.popularmovies.entities.Review;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,10 @@ public class MovieUtils {
     
     //For movie trailer
     private static final String MOVIE_TRAILER_KEY = "key";
+    
+    //For movie review
+    private static final String MOVIE_REVIEW_AUTHOR = "author";
+    private static final String MOVIE_REVIEW_CONTENT = "content";
     
     //Get a movie pojo from the json string
     public static List<Movie> getMoviesFromJsonResponse(String jsonResponse) {
@@ -53,6 +58,36 @@ public class MovieUtils {
             
             return movies;
             
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+    
+    public static List<Review> getReviewsFromJsonMovie(String jsonMovieReviews) {
+        JSONObject jsonObject;
+    
+        try {
+            jsonObject = new JSONObject(jsonMovieReviews);
+            //Get the json array from the results found from the json response
+            JSONArray results = jsonObject.getJSONArray("results");
+        
+            ArrayList<Review> reviews = new ArrayList<>();
+        
+            //Iterate over the results (JSONArray)
+            for (int n = 0; n < results.length(); n++) {
+                //Get the each object from the JSON array
+                JSONObject jsonReview = results.getJSONObject(n);
+                
+                Review review = new Review(
+                        jsonReview.getString(MOVIE_REVIEW_AUTHOR),
+                        jsonReview.getString(MOVIE_REVIEW_CONTENT)
+                );
+            
+                //Add the object to the movies array list
+                reviews.add(review);
+            }
+        
+            return reviews;
         } catch (JSONException e) {
             return null;
         }

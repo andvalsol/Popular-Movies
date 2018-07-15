@@ -11,10 +11,25 @@
                   <entry key="vectorAssetStep">
                     <value>
                       <PersistentState>
+                        <option name="children">
+                          <map>
+                            <entry key="clipartAsset">
+                              <value>
+                                <PersistentState>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="url" value="jar:file:/C:/Users/Luthiers/Downloads/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_rate_review_black_24dp.xml" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_movie_trailer" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_rate_review" />
                             <entry key="sourceFile" value="C:\Users\Luthiers\Desktop\Udacity\Developing Android apps\projects\SVG\if_youtube_291691.svg" />
                           </map>
                         </option>
