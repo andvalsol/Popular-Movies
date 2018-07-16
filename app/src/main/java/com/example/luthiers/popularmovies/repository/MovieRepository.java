@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.repository.network.MovieNetworkDataSource;
@@ -40,12 +41,13 @@ public class MovieRepository {
      * our UI could potentially show inconsistency
      * */
     public LiveData<Resource<List<Movie>>> getMovies(String filter) {
+        
         return new NetworkBoundResource<List<Movie>, String>(mAppExecutors) {
             
             @Override
             protected void saveCallResult(@NonNull String jsonMovies) {
                 //Use the MovieUtils.getMoviesFromJsonResponse
-                List movies = MovieUtils.getMoviesFromJsonResponse(jsonMovies);
+                List movies = MovieUtils.getMoviesFromJsonResponse(jsonMovies, filter);
                 
                 //Insert the movies into the MovieDatabase
                 mMovieDao.insertListMovies(movies);
@@ -60,13 +62,21 @@ public class MovieRepository {
             @Override
             protected LiveData<List<Movie>> loadFromDb() {
                 //Load from the database depending on the desired filter
-                if (filter.equals(Constants.MOST_POPULAR)) return mMovieDao.getMostPopularMovies();
-                else return mMovieDao.getTopRatedMovies();
+                switch (filter) {
+                    case Constants.MOST_POPULAR:
+                        return mMovieDao.getMostPopularMovies();
+                    case Constants.TOP_RATED:
+                        return mMovieDao.getTopRatedMovies();
+                    default:
+                        return mMovieDao.getFavoriteMovies();
+                }
             }
             
             @NonNull
             @Override
             protected LiveData<String> createCall() {
+                Log.d("filter", "createCall");
+                
                 MutableLiveData moviesMutableLiveData = new MutableLiveData<String>();
                 
                 //Since we're doing a network request, we need to do via in the diskIO thread
@@ -76,6 +86,7 @@ public class MovieRepository {
                         moviesMutableLiveData.postValue(mMovieNetworkDataSource.getMoviesFromNetwork(filter));
                         
                     } catch (IOException e) {
+                        Log.d("filter", "The error is: " + e.getMessage());
                         moviesMutableLiveData.postValue(null);
                     }
                 });

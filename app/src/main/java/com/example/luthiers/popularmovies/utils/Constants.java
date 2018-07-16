@@ -18,9 +18,16 @@ public final class Constants {
     public static final String MEDIUM_RES_IMAGE_SIZE = "w185";
     public static final String HIGH_RES_IMAGE_SIZE = "w500";
     
+    //For url querying
     public static final String MOVIE_DB_API_KEY = BuildConfig.API_KEY;
     public static final String MOST_POPULAR = "popular";
-    public static final String TOP_RATED = " top_rated";
+    public static final String TOP_RATED = "top_rated";
+    public static final String FAVORITE = "favorite";
+    
+    //For Room querying
+    public static final int ROOM_MOST_POPULAR = 0;
+    public static final int ROOM_TOP_RATED = 1;
+    public static final int ROOM_FAVORITE = 2;
 
     private Constants() {
         //Set private constructor to prevent instantiation of this class

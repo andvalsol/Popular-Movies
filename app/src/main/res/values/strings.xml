@@ -15,4 +15,5 @@
     <string name="fab">Floating action button</string>
     <string name="movie_trailer">Movie trailer</string>
     <string name="watch_movie_reviews">WATCH MOVIE REVIEWS</string>
+    <string name="favorites">Favorites</string>
 </resources>

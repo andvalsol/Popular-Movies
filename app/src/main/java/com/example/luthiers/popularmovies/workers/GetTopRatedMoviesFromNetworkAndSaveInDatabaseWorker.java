@@ -14,7 +14,8 @@ public class GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker extends Worker 
     @NonNull
     @Override
     public WorkerResult doWork() {
-        Log.d("TopRated", "Getting top rated movies");
+        Log.d("MoviesFilter", "1The query action is: " + Constants.TOP_RATED);
+        
         /*
          * The work doing here is going to be in the background by default
          * */

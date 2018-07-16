@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--Note: The layout seems to be proper also for bigger screen sizes-->
-
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -64,6 +63,16 @@
         app:layout_constraintStart_toStartOf="@id/tv_watch_reviews"
         app:layout_constraintTop_toBottomOf="@id/tv_watch_reviews"
         app:srcCompat="@drawable/ic_movie_trailer" />
+
+    <ImageView
+        android:id="@+id/iv_movie_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_movie_trailer"
+        app:layout_constraintStart_toEndOf="@+id/iv_movie_trailer"
+        app:layout_constraintTop_toTopOf="@+id/iv_movie_trailer"
+        tools:ignore="ContentDescription" />
 
     <!--Sometimes the release date is not available, set the visibility of the text view to gone-->
     <TextView
@@ -136,7 +145,7 @@
         android:id="@+id/group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:constraint_referenced_ids="layout2,tv_watch_reviews,tv_release_date,iv_movie_trailer,tv_title" />
+        app:constraint_referenced_ids="layout2,tv_watch_reviews,tv_release_date,iv_movie_trailer,tv_title,iv_movie_favorite" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movie_reviews"

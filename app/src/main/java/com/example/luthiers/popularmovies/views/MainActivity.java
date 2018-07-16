@@ -33,7 +33,7 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClicked {
     
-    private String mFilter;//Initialize the filter as most popular by default
+    private String mFilter; //Initialize the filter as most popular by default
     private MovieViewModel mMovieViewModel;
     private ImageButton mFab;
     private ConstraintLayout mFiltersLayout;
@@ -76,16 +76,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 //Set the proper value for the filter since the user wants to get the top rated movies
                 mFilter = Constants.TOP_RATED;
                 
-                //Set the filter to the MovieViewModel
-                mMovieViewModel.mFilter.setValue(mFilter);
-                
             } else if (checkedId == R.id.rb_most_popular) {
                 //Set the proper value for the filter since the user wants to get the most popular movies
                 mFilter = Constants.MOST_POPULAR;
                 
-                //Set the filter to the MovieViewModel
-                mMovieViewModel.mFilter.setValue(mFilter);
+            } else {
+                //Set the property value for the filter since the user wants to get the movies he/she marked as favorite
+                mFilter = Constants.FAVORITE;
             }
+    
+            //Set the filter to the MovieViewModel
+            mMovieViewModel.mFilter.setValue(mFilter);
             
             //Add the progress bar
             progressBar.setVisibility(View.VISIBLE);
@@ -113,14 +114,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMovieViewModel.getMoviesFromRepository().observe(this, movies -> {
             //We don't need to check if its loading, since initially we set the progress bar to be visible
     
-            switch (movies.status) {
+                switch (movies.status) {
                 case SUCCESS:
                     //Remove the progress bar since we got new data :)
                     progressBar.setVisibility(View.GONE);
             
                     //Add the list to the movies adapter
                     mMoviesAdapter.updateAdapter(movies.data);
-            
                     break;
                 case ERROR:
                     //Check if the progress bar is still visible, if it is then remove it

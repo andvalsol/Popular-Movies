@@ -30,10 +30,10 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             
             if (shouldFetch(data)) {
                 //We should fetch data since there's no data available in the Database
-                Log.d("Fetch", "should fetch data");
+                Log.d("filter", "should fetch data");
                 fetchFromNetwork(databaseSource);
             } else {
-                Log.d("Fetch", "shouldn't fetch data");
+                Log.d("filter", "shouldn't fetch data");
                 result.addSource(databaseSource, newData ->
                         updateValue(Resource.success(newData)));
             }

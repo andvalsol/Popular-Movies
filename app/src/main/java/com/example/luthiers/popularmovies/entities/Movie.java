@@ -15,6 +15,7 @@ import android.os.Parcelable;
  * -> releaseDate --> Type String
  * -> popularity --> Type Float
  * -> rating --> Type Float
+ * -> favourite --> Type boolean
  * */
 
 /*
@@ -27,11 +28,9 @@ import android.os.Parcelable;
 //We're using Parcelable implementation since we pass the movie via intent
 @Entity(tableName = "movie_table")
 public class Movie implements Parcelable {
-    
     //We need to set a unique primary key for every entry, since we are getting the id for every movie (provided by the sever), we can set it as the primary key
     @PrimaryKey
     private int id;
-    
     
     private String title;
     private String image;
@@ -40,6 +39,58 @@ public class Movie implements Parcelable {
     
     private Float rating;
     private Float popularity;
+    
+    private int queryAction;
+    
+    //Room require a constructor
+    public Movie(int id, String title,
+                 String image,
+                 String overview,
+                 String releaseDate,
+                 Float rating,
+                 Float popularity,
+                 int queryAction) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.rating = rating;
+        this.popularity = popularity;
+        this.queryAction = queryAction;
+    }
+    
+    @Ignore //Ignore this constructor, for Room logic
+    protected Movie(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        image = in.readString();
+        overview = in.readString();
+        releaseDate = in.readString();
+        if (in.readByte() == 0) {
+            rating = null;
+        } else {
+            rating = in.readFloat();
+        }
+        if (in.readByte() == 0) {
+            popularity = null;
+        } else {
+            popularity = in.readFloat();
+        }
+        queryAction = in.readInt();
+    }
+    
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+        
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
     
     public int getId() {
         return id;
@@ -97,44 +148,13 @@ public class Movie implements Parcelable {
         this.popularity = popularity;
     }
     
-    public Movie(int id, String title, String image, String overview, String releaseDate, Float rating, Float popularity) {
-        this.title = title;
-        this.image = image;
-        this.overview = overview;
-        this.releaseDate = releaseDate;
-        this.rating = rating;
-        this.popularity = popularity;
-        this.id = id;
+    public int getQueryAction() {
+        return queryAction;
     }
     
-    
-    //Tell Room to ignore this constructor
-    @Ignore
-    protected Movie(Parcel in) {
-        title = in.readString();
-        image = in.readString();
-        overview = in.readString();
-        releaseDate = in.readString();
-        if (in.readByte() == 0) {
-            rating = null;
-        } else {
-            rating = in.readFloat();
-        }
-        popularity = in.readFloat();
-        id = in.readInt();
+    public void setQueryAction(int queryAction) {
+        this.queryAction = queryAction;
     }
-    
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-        
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
     
     @Override
     public int describeContents() {
@@ -143,7 +163,7 @@ public class Movie implements Parcelable {
     
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(image);
         dest.writeString(overview);
@@ -154,7 +174,12 @@ public class Movie implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeFloat(rating);
         }
-        dest.writeFloat(popularity);
-        dest.writeInt(id);
+        if (popularity == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeFloat(popularity);
+        }
+        dest.writeInt(queryAction);
     }
 }

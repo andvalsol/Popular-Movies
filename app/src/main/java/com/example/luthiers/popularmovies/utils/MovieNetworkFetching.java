@@ -34,7 +34,7 @@ public class MovieNetworkFetching {
                 new PeriodicWorkRequest.Builder(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.MINUTES);
         
         PeriodicWorkRequest.Builder topRatedMoviesNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.DAYS);
+                new PeriodicWorkRequest.Builder(GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.MINUTES);
         
         //Setup task constraints
         Constraints movieNetworkFetchingConstraints = setConstraints();
@@ -54,8 +54,8 @@ public class MovieNetworkFetching {
         //Initialize a WorkManager
         WorkManager moviesWorkManager = WorkManager.getInstance();
         //Add the movieNetworkFetchingWorkRequest to the queue
-        moviesWorkManager.enqueue(mostPopularMoviesNetworkFetchingWorkRequest);
         moviesWorkManager.enqueue(topRatedMoviesNetworkFetchingWorkRequest);
+        moviesWorkManager.enqueue(mostPopularMoviesNetworkFetchingWorkRequest);
     }
     
     private static Constraints setConstraints() {
@@ -63,7 +63,6 @@ public class MovieNetworkFetching {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             return new Constraints.Builder()
                     .setRequiresStorageNotLow(true) //This make the app not making making any network requests if the storage space is low
-                    .setRequiresDeviceIdle(true) //This ensures that the work wont run if the device is in active use
                     .build();
         } else {
             return new Constraints.Builder()

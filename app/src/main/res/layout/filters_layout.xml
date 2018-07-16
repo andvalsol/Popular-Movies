@@ -5,22 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    android:paddingBottom="28dp"
     android:paddingStart="16dp"
     tools:ignore="RtlSymmetry">
 
-    <RadioGroup
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/filter_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:gravity="bottom"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <RadioButton
             android:id="@+id/rb_top_rated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:buttonTint="@color/sixtyBlack"
             android:text="@string/top_rated"
             android:textColor="@color/sixtyBlack" />
@@ -34,6 +35,14 @@
             android:checked="true"
             android:text="@string/most_popular"
             android:textColor="@color/sixtyBlack" />
+
+        <RadioButton
+            android:id="@+id/rb_favorite_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:buttonTint="@color/sixtyBlack"
+            android:text="@string/favorites" />
 
     </RadioGroup>
 

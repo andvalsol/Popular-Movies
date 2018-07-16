@@ -1,5 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
+import android.util.Log;
+
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.entities.Review;
 import com.google.gson.Gson;
@@ -32,7 +34,7 @@ public class MovieUtils {
     private static final String MOVIE_REVIEW_CONTENT = "content";
     
     //Get a movie pojo from the json string
-    public static List<Movie> getMoviesFromJsonResponse(String jsonResponse) {
+    public static List<Movie> getMoviesFromJsonResponse(String jsonResponse, String filter) {
         try {
             JSONObject jsonObject = new JSONObject(jsonResponse);
             JSONArray results = jsonObject.getJSONArray("results");
@@ -44,6 +46,11 @@ public class MovieUtils {
                 //Get the each object from the JSON array
                 JSONObject jsonMovie = results.getJSONObject(n);
                 
+                int queryAction;
+                if (filter.equals(Constants.MOST_POPULAR)) queryAction = Constants.ROOM_MOST_POPULAR;
+                else queryAction = Constants.ROOM_TOP_RATED;
+    
+                
                 //Create each movie from each json result
                 Movie movie = new Movie(
                         jsonMovie.getInt(MOVIE_ID),
@@ -52,7 +59,8 @@ public class MovieUtils {
                         jsonMovie.getString(MOVIE_OVERVIEW),
                         jsonMovie.getString(MOVIE_RELEASE_DATE),
                         (float) jsonMovie.getInt(MOVIE_RATING),
-                        (float) jsonMovie.getInt(MOVIE_POPULARITY)
+                        (float) jsonMovie.getInt(MOVIE_POPULARITY),
+                        queryAction
                 );
                 
                 //Add the object to the movies array list

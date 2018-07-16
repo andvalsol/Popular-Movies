@@ -19,7 +19,9 @@ import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.entities.Review;
 import com.example.luthiers.popularmovies.repository.network.GetMovieTrailerAsyncTask;
 import com.example.luthiers.popularmovies.repository.network.GetReviewsFromMovieAsyncTask;
+import com.example.luthiers.popularmovies.repository.room.InsertMovieAsyncTask;
 import com.example.luthiers.popularmovies.utils.AppExecutors;
+import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.utils.MovieUtils;
 import com.squareup.picasso.Picasso;
 
@@ -30,7 +32,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     private TextView mTitle, mOverview, mReleaseDate, mMovieReviews;
     private ImageView mMoviePoster;
     private RatingBar mRatingBar;
-    private ImageView mMovieTrailerButton;
+    private ImageView mMovieTrailerButton, mFavoriteMovie;
     private Group mGroup;
     private RecyclerView mrvReviews;
     private List<Review> mReviews;
@@ -38,7 +40,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_alt);
+        setContentView(R.layout.activity_detail);
         
         //Initialize the text views
         mTitle = findViewById(R.id.tv_title);
@@ -56,6 +58,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
         //Initialize the image views
         mMoviePoster = findViewById(R.id.iv_movie_poster);
         mMovieTrailerButton = findViewById(R.id.iv_movie_trailer);
+        mFavoriteMovie = findViewById(R.id.iv_movie_favorite);
         
         //Check the save instance state
         if (savedInstanceState != null) {
@@ -138,6 +141,16 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     }
     
     private void populateUI(Movie movie) {
+        //Set the click listener for the favorite movie image view
+        mFavoriteMovie.setOnClickListener(v -> {
+            //Set the movie as favorite
+            movie.setQueryAction(Constants.ROOM_FAVORITE);
+            
+            new InsertMovieAsyncTask(this, isMarkedAsFavorite -> {
+                Log.d("Favorite", "The movie was marked as favorite");
+            }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movie);
+        });
+        
         mTitle.setText(movie.getTitle());
         //Sometimes we don't receive an overview, so check if its not empty
         if (!movie.getOverview().equals("")) {
@@ -158,9 +171,17 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
             mReleaseDate.setText(movie.getReleaseDate());
         }
         
+        checkIfMovieIsFavorite(movie);
+        
         Picasso.get()
                 .load(movie.getImage())
                 .into(mMoviePoster);
+    }
+    
+    private void checkIfMovieIsFavorite(Movie movie) {
+        if (movie.getQueryAction() == Constants.ROOM_FAVORITE)
+            mFavoriteMovie.setBackgroundResource(R.drawable.ic_favorite);
+        else mFavoriteMovie.setBackgroundResource(R.drawable.ic_favorite_border);
     }
     
     @Override

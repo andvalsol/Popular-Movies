@@ -4,6 +4,7 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     
     private final MovieItemClicked mMovieItemClicked;
     private final Picasso mPicasso;
-    
     private final String mProperImageSize;
     
     //Setup a constructor getting the movieItemClicked interface
@@ -47,7 +47,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         
         return new MovieViewHolder(view);
     }
-    
     
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
@@ -130,7 +129,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     
     //Set the proper url depending on the properImageSize depending on the cellphone's current network latency
     private String getMoviePosterUrl(String moviePoster, String properImageSize) {
-        return "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
+        if (moviePoster.startsWith("http")) {
+            return moviePoster;
+        }
+        
+        return  "http://image.tmdb.org/t/p/" + properImageSize + moviePoster;
     }
     
     private class DiffUtilCallback extends DiffUtil.Callback {

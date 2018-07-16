@@ -15,14 +15,23 @@ import java.util.List;
 
 @Dao
 public interface MovieDao {
-
-    @Query("SELECT * FROM movie_table ORDER BY popularity DESC") //Get the most popular movies in descending order
+    //Get the most popular movies
+    @Query("SELECT * FROM movie_table WHERE queryAction = 0")
     LiveData<List<Movie>> getMostPopularMovies();
     
-    @Query("SELECT * FROM movie_table ORDER BY rating DESC") //Get the top rated movies in descending order
+    //Get the top rated movies
+    @Query("SELECT * FROM movie_table WHERE queryAction = 1")
     LiveData<List<Movie>> getTopRatedMovies();
     
-    @Insert(onConflict = OnConflictStrategy.REPLACE) //We want to replace, since the rating can be updated
+    //Insert the movies into the database, use onConflictStrategy as ignore, since a movie can be marked as favorite, and then lose this mark
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long[] insertListMovies(List<Movie> movies);//Return long so that we can check if the data was successfully saved
     
+    //Insert the movie the user marked as favorite, use onConflictStrategy as replace
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Long insertMovieAsFavorite(Movie movie);
+    
+    //We want to get the favorite movies, 0 = ROOM_MOST_POPULAR and 1 = ROOM_TOP_RATED and 2 = ROOM_FAVORITE
+    @Query("SELECT * FROM movie_table WHERE queryAction = 2")
+    LiveData<List<Movie>> getFavoriteMovies();
 }

@@ -1,6 +1,7 @@
 package com.example.luthiers.popularmovies.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.repository.network.MovieNetworkDataSource;
@@ -17,6 +18,9 @@ public class GetMoviesAndSaveInDatabase {
         //Query for the most popular movies
         try {
             String jsonMovies = MovieNetworkDataSource.getMoviesFromNetwork(filter);
+    
+            Log.d("MoviesFilter", "The jsonMovies is: " + jsonMovies);
+
             
             /*
             Since we're pre fetching the movies, we don't know the state of the user's network speed at runtime,
@@ -24,7 +28,7 @@ public class GetMoviesAndSaveInDatabase {
             at runtime.
             */
             //Get the list of movies objects from the json response gotten from the GetMoviesFromNetworkWorker, use empty string because of previous explanation
-            List<Movie> movies = MovieUtils.getMoviesFromJsonResponse(jsonMovies);
+            List<Movie> movies = MovieUtils.getMoviesFromJsonResponse(jsonMovies, filter);
             
             //Insert the list of movies in the database
             Long[] wereSaved = MovieDatabase.getInstance(context).mMovieDao().insertListMovies(movies);
