@@ -32,7 +32,8 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     private RatingBar mRatingBar;
     private ImageView mMovieTrailerButton;
     private Group mGroup;
-    private RecyclerView mReviews;
+    private RecyclerView mrvReviews;
+    private List<Review> mReviews;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
         
         mGroup = findViewById(R.id.group);
         
-        mReviews = findViewById(R.id.rv_movie_reviews);
+        mrvReviews = findViewById(R.id.rv_movie_reviews);
         
         //Initialize the rating bar
         mRatingBar = findViewById(R.id.rb_movie_rating);
@@ -55,6 +56,11 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
         //Initialize the image views
         mMoviePoster = findViewById(R.id.iv_movie_poster);
         mMovieTrailerButton = findViewById(R.id.iv_movie_trailer);
+        
+        //Check the save instance state
+        if (savedInstanceState != null) {
+            mReviews = MovieUtils.getReviewsFromJsonReviews(savedInstanceState.getString("reviews", ""));
+        }
         
         //Check if we have received an intent
         if (getIntent().getExtras() != null) {
@@ -66,40 +72,55 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
             
             //Get the trailers from the selected movie
             getMovieTrailers(movie.getId());
+            
             //Get the movie reviews
             getMovieReviews(movie.getId());
         }
     }
     
     private void getMovieReviews(int movieId) {
-        new GetReviewsFromMovieAsyncTask(movieReviews -> {
-            if (movieReviews != null && movieReviews.size() > 0) {
-                setInfoLayoutVisibility();
-                
-                
-                //Set the visibility of the WATCH MOVIE REVIEWS text view to VISIBLE
-                mMovieReviews.setVisibility(View.VISIBLE);
-                
-                //Set the movie review to the correspond recycler view
-                setMovieReviews(movieReviews);
-            }
-        }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movieId);
+        if (mReviews == null) {
+            //There are already reviews gotten from the savedInstanceState, so there's no need to check for movie reviews
+            new GetReviewsFromMovieAsyncTask(movieReviews -> {
+                if (movieReviews != null && movieReviews.size() > 0) {
+                    //Save the reviews, in case we need to use them for a configuration change
+                    mReviews = movieReviews;
+                    
+                    setInfoLayoutVisibility();
+                    
+                    //Set the visibility of the WATCH MOVIE REVIEWS text view to VISIBLE
+                    mMovieReviews.setVisibility(View.VISIBLE);
+                    
+                    //Set the movie review to the correspond recycler view
+                    setMovieReviews(movieReviews);
+                }
+            }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movieId);
+        } else {
+            //Set the movie reviews to the recycler view
+            setMovieReviews(mReviews);
+            
+            //Add the proper logic for the movie reviews visibility
+            setMovieReviewsToVisible();
+        }
     }
     
     private void setInfoLayoutVisibility() {
-        mMovieReviews.setOnClickListener(v -> {
-            //Hide the information of the movie and make the reviews visible to the user
-            mGroup.setVisibility(View.GONE);
-            mReviews.setVisibility(View.VISIBLE);
-        });
+        mMovieReviews.setOnClickListener(v -> setMovieReviewsToVisible());
+    }
+    
+    private void setMovieReviewsToVisible() {
+        //Hide the information of the movie and make the reviews visible to the user
+        mGroup.setVisibility(View.GONE);
+        
+        mrvReviews.setVisibility(View.VISIBLE);
     }
     
     private void setMovieReviews(List<Review> reviews) {
         //The size of each item from the recycler view won't change, so set this value to be true, to let recycler view do some optimizations
-        mReviews.setHasFixedSize(true);
-        mReviews.setLayoutManager(new LinearLayoutManager(this));
+        mrvReviews.setHasFixedSize(true);
+        mrvReviews.setLayoutManager(new LinearLayoutManager(this));
         //Set the moviesAdapter to the recycler view
-        mReviews.setAdapter(new ReviewsAdapter(reviews, this::recyclerViewOnClick));
+        mrvReviews.setAdapter(new ReviewsAdapter(reviews, this));
     }
     
     private void getMovieTrailers(int movieId) {
@@ -143,10 +164,19 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     }
     
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        
+        if (mrvReviews.getVisibility() == View.VISIBLE) {
+            //The user is checking the reviews, so save this state
+            outState.putString("reviews", MovieUtils.getJsonReviewsFromReviewsList(mReviews));
+        }
+    }
+    
+    @Override
     public void recyclerViewOnClick() {
-        Log.d("Reviews", "mReviews recycler view being clicked");
         //Hide the movie reviews and make the information of the movie visible to the user
-        mReviews.setVisibility(View.GONE);
+        mrvReviews.setVisibility(View.GONE);
         mGroup.setVisibility(View.VISIBLE);
     }
 }

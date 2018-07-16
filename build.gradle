@@ -35,4 +35,5 @@ ext {
     room = "1.1.0"
     workManager = "1.0.0-alpha02"
     dagger2 = "2.15"
+    gson = "2.8.4"
 }

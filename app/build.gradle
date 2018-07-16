@@ -60,4 +60,8 @@ dependencies {
 
     //Third party implementations
     implementation "com.squareup.picasso:picasso:${rootProject.picasso}"
+
+    //Third party implementation
+    implementation "com.google.code.gson:gson:${rootProject.gson}"
+
 }

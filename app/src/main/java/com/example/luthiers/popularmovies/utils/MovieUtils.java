@@ -2,11 +2,14 @@ package com.example.luthiers.popularmovies.utils;
 
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.entities.Review;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +110,24 @@ public class MovieUtils {
         } catch (JSONException e) {
             return "";
         }
+    }
+    
+    public static String getJsonReviewsFromReviewsList(List<Review> reviews) {
+        //Create a new Gson object, Gson is the fastest library to get small sets of Json data
+        Gson gson = new Gson();
+    
+        return gson.toJson(reviews);
+    }
+    
+    public static List<Review> getReviewsFromJsonReviews(String jsonReviews) {
+        //Create a new Gson object, Gson is the fastest library to get small sets of Json data
+        Gson gson = new Gson();
+    
+        //Create a TypeToken for Gson to use
+        Type type = new TypeToken<List<Review>>() {
+        }.getType();
+    
+        return gson.fromJson(jsonReviews, type);
     }
     
     public static String getMovieTrailer(String keyId) {
