@@ -2,6 +2,7 @@ package com.example.luthiers.popularmovies.repository.room;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -30,6 +31,10 @@ public interface MovieDao {
     //Insert the movie the user marked as favorite, use onConflictStrategy as replace
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertMovieAsFavorite(Movie movie);
+    
+    //Remove the movie from favorites
+    @Delete
+    int removeMovieFromFavorites(Movie movie);
     
     //We want to get the favorite movies, 0 = ROOM_MOST_POPULAR and 1 = ROOM_TOP_RATED and 2 = ROOM_FAVORITE
     @Query("SELECT * FROM movie_table WHERE queryAction = 2 ORDER BY popularity DESC")

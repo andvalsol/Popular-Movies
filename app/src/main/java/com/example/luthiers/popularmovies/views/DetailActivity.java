@@ -19,7 +19,8 @@ import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.entities.Review;
 import com.example.luthiers.popularmovies.repository.network.GetMovieTrailerAsyncTask;
 import com.example.luthiers.popularmovies.repository.network.GetReviewsFromMovieAsyncTask;
-import com.example.luthiers.popularmovies.repository.room.InsertMovieAsyncTask;
+import com.example.luthiers.popularmovies.repository.room.asyncTask.InsertMovieAsyncTask;
+import com.example.luthiers.popularmovies.repository.room.asyncTask.RemoveMovieAsyncTask;
 import com.example.luthiers.popularmovies.utils.AppExecutors;
 import com.example.luthiers.popularmovies.utils.CheckableImageButton;
 import com.example.luthiers.popularmovies.utils.Constants;
@@ -144,13 +145,15 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     private void populateUI(Movie movie) {
         //Set the click listener for the favorite movie image view
         mFavoriteMovie.setOnClickListener(v -> {
-            Log.d("State", "the button is checked" + mFavoriteMovie.isChecked());
-            //Set the movie as favorite
-            movie.setQueryAction(Constants.ROOM_FAVORITE);
-            
-            new InsertMovieAsyncTask(this, isMarkedAsFavorite -> {
-                Log.d("Favorite", "The movie was marked as favorite");
-            }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movie);
+            if (mFavoriteMovie.isChecked()) { //The user wants to set the movie as favorite
+                //Set the movie as favorite
+                movie.setQueryAction(Constants.ROOM_FAVORITE);
+                
+                new InsertMovieAsyncTask(this).executeOnExecutor(AppExecutors.getInstance().networkIO(), movie);
+                
+            } else { //The user wants to remove the movie from his/her favorites
+                new RemoveMovieAsyncTask(this).executeOnExecutor(AppExecutors.getInstance().networkIO(), movie);
+            }
         });
         
         mTitle.setText(movie.getTitle());
