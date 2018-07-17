@@ -10,7 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        // Please ensure you have a valid API KEY for themoviedb.org↵
+        // Please ensure you have a valid API KEY for themoviedb.org
         //to use this app
         // A valid key will need to be entered
         buildConfigField("String", "API_KEY", API_KEY)
@@ -63,5 +63,4 @@ dependencies {
 
     //Third party implementation
     implementation "com.google.code.gson:gson:${rootProject.gson}"
-
 }

@@ -64,14 +64,17 @@
         app:layout_constraintTop_toBottomOf="@id/tv_watch_reviews"
         app:srcCompat="@drawable/ic_movie_trailer" />
 
-    <ImageView
+    <!--Use custom checkable image button since we want to update the background drawable when its checked or not-->
+    <com.example.luthiers.popularmovies.utils.CheckableImageButton
         android:id="@+id/iv_movie_favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@null"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_movie_trailer"
         app:layout_constraintStart_toEndOf="@+id/iv_movie_trailer"
         app:layout_constraintTop_toTopOf="@+id/iv_movie_trailer"
+        app:srcCompat="@drawable/selector_favorite"
         tools:ignore="ContentDescription" />
 
     <!--Sometimes the release date is not available, set the visibility of the text view to gone-->
@@ -124,7 +127,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent" />
-
 
         <!--Sometimes the movie has not been rated yet-->
         <RatingBar

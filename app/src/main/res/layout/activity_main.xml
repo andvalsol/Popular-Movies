@@ -57,11 +57,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="@+id/fab" />
 
+        <!--Increase the bottom margin so that the filter layout can be completely visible-->
         <ImageButton
             android:id="@+id/fab"
             android:layout_width="@dimen/fab_size"
             android:layout_height="@dimen/fab_size"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="22dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/circle"
             android:contentDescription="@string/fab"

@@ -16,11 +16,11 @@ import java.util.List;
 @Dao
 public interface MovieDao {
     //Get the most popular movies
-    @Query("SELECT * FROM movie_table WHERE queryAction = 0")
+    @Query("SELECT * FROM movie_table WHERE queryAction = 0 ORDER BY popularity DESC")
     LiveData<List<Movie>> getMostPopularMovies();
     
     //Get the top rated movies
-    @Query("SELECT * FROM movie_table WHERE queryAction = 1")
+    @Query("SELECT * FROM movie_table WHERE queryAction = 1 ORDER BY rating DESC")
     LiveData<List<Movie>> getTopRatedMovies();
     
     //Insert the movies into the database, use onConflictStrategy as ignore, since a movie can be marked as favorite, and then lose this mark
@@ -32,6 +32,6 @@ public interface MovieDao {
     Long insertMovieAsFavorite(Movie movie);
     
     //We want to get the favorite movies, 0 = ROOM_MOST_POPULAR and 1 = ROOM_TOP_RATED and 2 = ROOM_FAVORITE
-    @Query("SELECT * FROM movie_table WHERE queryAction = 2")
+    @Query("SELECT * FROM movie_table WHERE queryAction = 2 ORDER BY popularity DESC")
     LiveData<List<Movie>> getFavoriteMovies();
 }

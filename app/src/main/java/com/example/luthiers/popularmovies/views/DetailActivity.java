@@ -21,6 +21,7 @@ import com.example.luthiers.popularmovies.repository.network.GetMovieTrailerAsyn
 import com.example.luthiers.popularmovies.repository.network.GetReviewsFromMovieAsyncTask;
 import com.example.luthiers.popularmovies.repository.room.InsertMovieAsyncTask;
 import com.example.luthiers.popularmovies.utils.AppExecutors;
+import com.example.luthiers.popularmovies.utils.CheckableImageButton;
 import com.example.luthiers.popularmovies.utils.Constants;
 import com.example.luthiers.popularmovies.utils.MovieUtils;
 import com.squareup.picasso.Picasso;
@@ -30,9 +31,9 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.ReviewsInterface {
     
     private TextView mTitle, mOverview, mReleaseDate, mMovieReviews;
-    private ImageView mMoviePoster;
+    private ImageView mMoviePoster, mMovieTrailerButton;
     private RatingBar mRatingBar;
-    private ImageView mMovieTrailerButton, mFavoriteMovie;
+    private CheckableImageButton mFavoriteMovie;
     private Group mGroup;
     private RecyclerView mrvReviews;
     private List<Review> mReviews;
@@ -143,6 +144,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     private void populateUI(Movie movie) {
         //Set the click listener for the favorite movie image view
         mFavoriteMovie.setOnClickListener(v -> {
+            Log.d("State", "the button is checked" + mFavoriteMovie.isChecked());
             //Set the movie as favorite
             movie.setQueryAction(Constants.ROOM_FAVORITE);
             
@@ -180,8 +182,8 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     
     private void checkIfMovieIsFavorite(Movie movie) {
         if (movie.getQueryAction() == Constants.ROOM_FAVORITE)
-            mFavoriteMovie.setBackgroundResource(R.drawable.ic_favorite);
-        else mFavoriteMovie.setBackgroundResource(R.drawable.ic_favorite_border);
+            mFavoriteMovie.setChecked(true);
+        else mFavoriteMovie.setChecked(false);
     }
     
     @Override
