@@ -10,15 +10,14 @@ import com.example.luthiers.popularmovies.repository.room.MovieDatabase;
 import java.io.IOException;
 import java.util.List;
 
-import androidx.work.Worker;
 
 public class GetMoviesAndSaveInDatabase {
     
-    public static Worker.WorkerResult getMoviesAndSaveInDatabase(String filter, Context context) {
+    public static void getMoviesAndSaveInDatabase(String filter, Context context) {
         //Query for the most popular movies
         try {
             String jsonMovies = MovieNetworkDataSource.getMoviesFromNetwork(filter);
-    
+            
             Log.d("MoviesFilter", "The jsonMovies is: " + jsonMovies);
 
             
@@ -31,21 +30,9 @@ public class GetMoviesAndSaveInDatabase {
             List<Movie> movies = MovieUtils.getMoviesFromJsonResponse(jsonMovies, filter);
             
             //Insert the list of movies in the database
-            Long[] wereSaved = MovieDatabase.getInstance(context).mMovieDao().insertListMovies(movies);
-            
-            //Check if the list of movies were successfully saved, if they were return SUCCESS if not return FAILURE
-            for (long wasSaved : wereSaved) {
-                if (wasSaved == -1) {
-                    //If one data wasn't saved then set the result as FAILURE, so that if can be tried again later
-                    return Worker.WorkerResult.FAILURE;
-                }
-            }
-            
-            //The list of movies were successfully saved
-            return Worker.WorkerResult.SUCCESS;
+            MovieDatabase.getInstance(context).mMovieDao().insertListMovies(movies);
         } catch (IOException e) {
-            //There was an error retrieving the movies
-            return Worker.WorkerResult.FAILURE;
+            e.printStackTrace();
         }
     }
 }

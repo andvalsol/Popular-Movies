@@ -1,73 +1,61 @@
 package com.example.luthiers.popularmovies.utils;
 
-import com.example.luthiers.popularmovies.workers.GetPopularMoviesFromNetworkAndSaveInDatabaseWorker;
-import com.example.luthiers.popularmovies.workers.GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker;
 
-import java.util.concurrent.TimeUnit;
-
-import androidx.work.Constraints;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
+import com.example.luthiers.popularmovies.CinephileApplication;
+import com.example.luthiers.popularmovies.jobServices.GetPopularMoviesFromNetworkAndSaveInDatabaseWorker;
+import com.example.luthiers.popularmovies.jobServices.GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 
 public class MovieNetworkFetching {
     
     private static final String MOVIE_NETWORK_JOB_TAG = "movie_network_job_tag";
+    
     private static boolean sInitialized;
+    
+    private static FirebaseJobDispatcher sJob = new FirebaseJobDispatcher(new GooglePlayDriver(CinephileApplication.getAppContext()));
+    
     
     synchronized public static void scheduleMovieNetworkFetching() {
         //Check that the scheduling hasn't been initialized
         if (sInitialized) return;
         
         //Set the recurring task
-        initRecurringTasks();
+        addRecurringJobs();
+        
         
         //Set the MovieNetworkFetching class as initialized
         sInitialized = true;
     }
     
-    private static void initRecurringTasks() {
-        int requestTimeInDays = 1;
-        /* Because not every day there's a movie release, schedule the network request for movies every 7 days,
-         * this value can be tested better and set via Firebase Remote Config for better user experience
-         * */
-        PeriodicWorkRequest.Builder mostPopularMoviesNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.MINUTES);
-        
-        PeriodicWorkRequest.Builder topRatedMoviesNetworkFetchingBuilder =
-                new PeriodicWorkRequest.Builder(GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker.class, requestTimeInDays, TimeUnit.MINUTES);
-        
-        //Setup task constraints
-        Constraints movieNetworkFetchingConstraints = setConstraints();
-        
-        //Create the GetPopularMoviesFromNetworkAndSaveInDatabaseWorker instance
-        PeriodicWorkRequest mostPopularMoviesNetworkFetchingWorkRequest = mostPopularMoviesNetworkFetchingBuilder
-                .setConstraints(movieNetworkFetchingConstraints)
-                .addTag(MOVIE_NETWORK_JOB_TAG)
+    private static void addRecurringJobs() {
+        Job getPopularMoviesJob = sJob
+                .newJobBuilder()
+                .setService(GetPopularMoviesFromNetworkAndSaveInDatabaseWorker.class)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setReplaceCurrent(false)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setTag(MOVIE_NETWORK_JOB_TAG)
+                .setTrigger(Trigger.executionWindow(10, 30))
                 .build();
-        
-        //Create the GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker instance
-        PeriodicWorkRequest topRatedMoviesNetworkFetchingWorkRequest = topRatedMoviesNetworkFetchingBuilder
-                .setConstraints(movieNetworkFetchingConstraints)
-                .addTag(MOVIE_NETWORK_JOB_TAG)
-                .build();
-        
-        //Initialize a WorkManager
-        WorkManager moviesWorkManager = WorkManager.getInstance();
-        //Add the movieNetworkFetchingWorkRequest to the queue
-        moviesWorkManager.enqueue(topRatedMoviesNetworkFetchingWorkRequest);
-        moviesWorkManager.enqueue(mostPopularMoviesNetworkFetchingWorkRequest);
-    }
     
-    private static Constraints setConstraints() {
-        //setRequiresDeviceIdle requires SDK>= M, therefore check for the current os version of the device
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            return new Constraints.Builder()
-                    .setRequiresStorageNotLow(true) //This make the app not making making any network requests if the storage space is low
-                    .build();
-        } else {
-            return new Constraints.Builder()
-                    .setRequiresStorageNotLow(true) //This make the app not making making any network requests if the storage space is low
-                    .build();
-        }
+        Job getTopRatedMoviesJob = sJob
+                .newJobBuilder()
+                .setService(GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker.class)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setReplaceCurrent(false)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setTag(MOVIE_NETWORK_JOB_TAG)
+                .setTrigger(Trigger.executionWindow(5, 20))
+                .build();
+        
+        sJob.mustSchedule(getTopRatedMoviesJob);
+        sJob.mustSchedule(getPopularMoviesJob);
     }
 }

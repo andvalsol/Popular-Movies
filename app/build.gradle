@@ -50,7 +50,7 @@ dependencies {
     //For Android Architecture Components
     implementation "android.arch.paging:runtime:${rootProject.paging}"
     implementation "android.arch.lifecycle:extensions:${rootProject.lifecycle}"
-    implementation "android.arch.work:work-runtime:$rootProject.workManager"
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation "android.arch.persistence.room:runtime:$rootProject.room"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room"
 

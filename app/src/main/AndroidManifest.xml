@@ -23,6 +23,27 @@
         <activity
             android:name=".views.DetailActivity"
             android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".jobServices.GetTopRatedMoviesFromNetworkAndSaveInDatabaseWorker"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+
+        </service>
+
+        <service
+            android:name=".jobServices.GetPopularMoviesFromNetworkAndSaveInDatabaseWorker"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+
+        </service>
+
     </application>
 
 </manifest>
