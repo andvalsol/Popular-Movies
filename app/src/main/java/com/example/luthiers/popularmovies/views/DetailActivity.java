@@ -2,7 +2,6 @@ package com.example.luthiers.popularmovies.views;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,10 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.luthiers.popularmovies.R;
 import com.example.luthiers.popularmovies.adapter.ReviewsAdapter;
+import com.example.luthiers.popularmovies.adapter.TrailersAdapter;
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.entities.Review;
 import com.example.luthiers.popularmovies.repository.network.GetMovieTrailerAsyncTask;
@@ -29,14 +30,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.ReviewsInterface {
+public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.ReviewsInterface, TrailersAdapter.TrailersInterface {
     
     private TextView mTitle, mOverview, mReleaseDate, mMovieReviews;
-    private ImageView mMoviePoster, mMovieTrailerButton;
+    private ImageView mMoviePoster;
     private RatingBar mRatingBar;
     private CheckableImageButton mFavoriteMovie;
-    private Group mGroup;
-    private RecyclerView mrvReviews;
+    private ScrollView mScrollView;
+    private RecyclerView mrvReviews, mrvTrailers;
     private List<Review> mReviews;
     
     @Override
@@ -50,16 +51,16 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
         mReleaseDate = findViewById(R.id.tv_release_date);
         mMovieReviews = findViewById(R.id.tv_watch_reviews);
         
-        mGroup = findViewById(R.id.group);
+        mScrollView = findViewById(R.id.sv);
         
         mrvReviews = findViewById(R.id.rv_movie_reviews);
+        mrvTrailers = findViewById(R.id.rv_movie_trailers);
         
         //Initialize the rating bar
         mRatingBar = findViewById(R.id.rb_movie_rating);
         
         //Initialize the image views
         mMoviePoster = findViewById(R.id.iv_movie_poster);
-        mMovieTrailerButton = findViewById(R.id.iv_movie_trailer);
         mFavoriteMovie = findViewById(R.id.iv_movie_favorite);
         
         //Check the save instance state
@@ -115,7 +116,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     
     private void setMovieReviewsToVisible() {
         //Hide the information of the movie and make the reviews visible to the user
-        mGroup.setVisibility(View.GONE);
+        mScrollView.setVisibility(View.GONE);
         
         mrvReviews.setVisibility(View.VISIBLE);
     }
@@ -129,13 +130,17 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     }
     
     private void getMovieTrailers(int movieId) {
-        new GetMovieTrailerAsyncTask(movieTrailerKey -> {
-            if (!movieTrailerKey.isEmpty()) {
-                mMovieTrailerButton.setOnClickListener(v -> launchYouTubeTrailer(movieTrailerKey));
-                
-                mMovieTrailerButton.setVisibility(View.VISIBLE);
+        new GetMovieTrailerAsyncTask(movieTrailerKeys -> {
+            if (!movieTrailerKeys.isEmpty()) {
+                setMovieTrailers(movieTrailerKeys);
             }
         }).executeOnExecutor(AppExecutors.getInstance().networkIO(), movieId);
+    }
+    
+    private void setMovieTrailers(List<String> movieTrailerKeys) {
+        mrvTrailers.setHasFixedSize(true); // To improve performance
+        mrvTrailers.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mrvTrailers.setAdapter(new TrailersAdapter(movieTrailerKeys, this::launchYouTubeTrailer));
     }
     
     private void launchYouTubeTrailer(String movieTrailerKey) {
@@ -203,6 +208,11 @@ public class DetailActivity extends AppCompatActivity implements ReviewsAdapter.
     public void recyclerViewOnClick() {
         //Hide the movie reviews and make the information of the movie visible to the user
         mrvReviews.setVisibility(View.GONE);
-        mGroup.setVisibility(View.VISIBLE);
+        mScrollView.setVisibility(View.VISIBLE);
+    }
+    
+    @Override
+    public void trailerOnClickListener(String movieTrailerKey) {
+        launchYouTubeTrailer(movieTrailerKey);
     }
 }

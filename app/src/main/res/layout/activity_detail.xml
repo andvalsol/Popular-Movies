@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--Note: The layout seems to be proper also for bigger screen sizes-->
+<?xml version="1.0" encoding="utf-8"?><!--Note: The layout seems to be proper also for bigger screen sizes-->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.DetailActivity">
+
 
     <!--Add content description for Android Accessibility-->
     <ImageView
@@ -24,130 +23,117 @@
         android:layout_height="match_parent"
         android:background="@color/transparentBlack"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_title" />
-
-    <TextView
-        android:id="@+id/tv_tap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:padding="16dp"
-        android:text="@string/tap_to_info"
-        android:textColor="@android:color/white"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <!--Make the title slide from left to right setting the layout_constraintRight_toLeftOf -->
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-        android:textColor="@android:color/white"
-        android:textSize="28sp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_movie_trailer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/movie_trailer"
-        android:padding="16dp"
-        app:layout_constraintStart_toStartOf="@id/tv_watch_reviews"
-        app:layout_constraintTop_toBottomOf="@id/tv_watch_reviews"
-        app:srcCompat="@drawable/ic_movie_trailer" />
-
-    <!--Use custom checkable image button since we want to update the background drawable when its checked or not-->
-    <com.example.luthiers.popularmovies.utils.CheckableImageButton
-        android:id="@+id/iv_movie_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_movie_trailer"
-        app:layout_constraintStart_toEndOf="@+id/iv_movie_trailer"
-        app:layout_constraintTop_toTopOf="@+id/iv_movie_trailer"
-        app:srcCompat="@drawable/selector_favorite"
-        tools:ignore="ContentDescription" />
-
-    <!--Sometimes the release date is not available, set the visibility of the text view to gone-->
-    <TextView
-        android:id="@+id/tv_release_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-        android:textColor="@color/translucentWhite"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tv_title"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
-    <TextView
-        android:id="@+id/tv_watch_reviews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/watch_movie_reviews"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-        android:textColor="@color/translucentWhite"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
-
-
-    <!--We want the overview and the rating to appear as one layout-->
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/layout2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!--Sometimes we don't get an overview so start with visibility as gone-->
-        <TextView
-            android:id="@+id/tv_overview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/rb_movie_rating"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!--Sometimes the movie has not been rated yet-->
-        <RatingBar
-            android:id="@+id/rb_movie_rating"
-            style="@style/Base.Widget.AppCompat.RatingBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:progressTint="@color/yellow"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_overview"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.Group
-        android:id="@+id/group"
+    <ScrollView
+        android:id="@+id/sv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:constraint_referenced_ids="layout2,tv_watch_reviews,tv_release_date,iv_movie_trailer,tv_title,iv_movie_favorite" />
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_tap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:padding="16dp"
+                android:text="@string/tap_to_info"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <!--Make the title slide from left to right setting the layout_constraintRight_toLeftOf -->
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/white"
+                android:textSize="28sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--Use custom checkable image button since we want to update the background drawable when its checked or not-->
+            <com.example.luthiers.popularmovies.utils.CheckableImageButton
+                android:id="@+id/iv_movie_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:padding="16dp"
+                app:layout_constraintStart_toStartOf="@id/tv_watch_reviews"
+                app:layout_constraintTop_toBottomOf="@id/tv_watch_reviews"
+                app:srcCompat="@drawable/selector_favorite"
+                tools:ignore="ContentDescription" />
+
+            <!--Sometimes the release date is not available, set the visibility of the text view to gone-->
+            <TextView
+                android:id="@+id/tv_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                android:textColor="@color/translucentWhite"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+            <TextView
+                android:id="@+id/tv_watch_reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="@string/watch_movie_reviews"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                android:textColor="@color/translucentWhite"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movie_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/iv_movie_favorite" />
+
+            <!--Sometimes we don't get an overview so start with visibility as gone-->
+            <TextView
+                android:id="@+id/tv_overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_movie_trailers" />
+
+            <!--Sometimes the movie has not been rated yet-->
+            <RatingBar
+                android:id="@+id/rb_movie_rating"
+                style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:progressTint="@color/yellow"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </ScrollView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movie_reviews"

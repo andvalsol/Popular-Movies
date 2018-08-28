@@ -1,7 +1,5 @@
 package com.example.luthiers.popularmovies.utils;
 
-import android.util.Log;
-
 import com.example.luthiers.popularmovies.entities.Movie;
 import com.example.luthiers.popularmovies.entities.Review;
 import com.google.gson.Gson;
@@ -47,9 +45,10 @@ public class MovieUtils {
                 JSONObject jsonMovie = results.getJSONObject(n);
                 
                 int queryAction;
-                if (filter.equals(Constants.MOST_POPULAR)) queryAction = Constants.ROOM_MOST_POPULAR;
+                if (filter.equals(Constants.MOST_POPULAR))
+                    queryAction = Constants.ROOM_MOST_POPULAR;
                 else queryAction = Constants.ROOM_TOP_RATED;
-    
+                
                 
                 //Create each movie from each json result
                 Movie movie = new Movie(
@@ -76,14 +75,14 @@ public class MovieUtils {
     
     public static List<Review> getReviewsFromJsonMovie(String jsonMovieReviews) {
         JSONObject jsonObject;
-    
+        
         try {
             jsonObject = new JSONObject(jsonMovieReviews);
             //Get the json array from the results found from the json response
             JSONArray results = jsonObject.getJSONArray("results");
-        
+            
             ArrayList<Review> reviews = new ArrayList<>();
-        
+            
             //Iterate over the results (JSONArray)
             for (int n = 0; n < results.length(); n++) {
                 //Get the each object from the JSON array
@@ -93,48 +92,52 @@ public class MovieUtils {
                         jsonReview.getString(MOVIE_REVIEW_AUTHOR),
                         jsonReview.getString(MOVIE_REVIEW_CONTENT)
                 );
-            
+                
                 //Add the object to the movies array list
                 reviews.add(review);
             }
-        
+            
             return reviews;
         } catch (JSONException e) {
             return null;
         }
     }
     
-    public static String getMovieTrailerKeyFromJsonResource(String jsonMovieTrailer) {
+    public static List<String> getMovieTrailerKeyFromJsonResource(String jsonMovieTrailer) {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(jsonMovieTrailer);
             //Get the json array from the results found from the json response
             JSONArray results = jsonObject.getJSONArray("results");
-    
-            //Get the first object from the json array
-            JSONObject firstArray = results.getJSONObject(0);
-            return firstArray.getString(MOVIE_TRAILER_KEY);
+            
+            List<String> movieIds = new ArrayList<>(results.length());
+            
+            for (int i = 0; i < results.length(); i++) {
+                movieIds.add(results.getJSONObject(i).getString(MOVIE_TRAILER_KEY));
+            }
+            
+            return movieIds;
             
         } catch (JSONException e) {
-            return "";
+            return null;
         }
     }
     
     public static String getJsonReviewsFromReviewsList(List<Review> reviews) {
         //Create a new Gson object, Gson is the fastest library to get small sets of Json data
         Gson gson = new Gson();
-    
+        
         return gson.toJson(reviews);
     }
     
     public static List<Review> getReviewsFromJsonReviews(String jsonReviews) {
         //Create a new Gson object, Gson is the fastest library to get small sets of Json data
         Gson gson = new Gson();
-    
+        
         //Create a TypeToken for Gson to use
         Type type = new TypeToken<List<Review>>() {
         }.getType();
-    
+        
         return gson.fromJson(jsonReviews, type);
     }
     

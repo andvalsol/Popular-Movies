@@ -50,8 +50,8 @@ dependencies {
     //For Android Architecture Components
     implementation "android.arch.paging:runtime:${rootProject.paging}"
     implementation "android.arch.lifecycle:extensions:${rootProject.lifecycle}"
-    implementation "android.arch.persistence.room:runtime:$rootProject.room"
     implementation "android.arch.work:work-runtime:$rootProject.workManager"
+    implementation "android.arch.persistence.room:runtime:$rootProject.room"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room"
 
     //For Dagger2 (dependency injection library)

@@ -5,8 +5,9 @@ import android.os.AsyncTask;
 import com.example.luthiers.popularmovies.utils.MovieUtils;
 
 import java.io.IOException;
+import java.util.List;
 
-public class GetMovieTrailerAsyncTask extends AsyncTask<Integer, Void, String> {
+public class GetMovieTrailerAsyncTask extends AsyncTask<Integer, Void, List<String>> {
     
     private GetMovieTrailerInterface delegate;
     
@@ -15,21 +16,21 @@ public class GetMovieTrailerAsyncTask extends AsyncTask<Integer, Void, String> {
     }
     
     @Override
-    protected String doInBackground(Integer... movieIds) {
+    protected List<String> doInBackground(Integer... movieIds) {
         try {
             //Here we get the JSON from the trailer
             String jsonTrailer = MovieNetworkDataSource.getMovieTrailerKey(movieIds[0]);
     
             return MovieUtils.getMovieTrailerKeyFromJsonResource(jsonTrailer);
         } catch (IOException e) {
-            return "";
+            return null;
         }
     }
     
     @Override
-    protected void onPostExecute(String movieTrailerKey) {
-        super.onPostExecute(movieTrailerKey);
+    protected void onPostExecute(List<String> movieTrailerKeys) {
+        super.onPostExecute(movieTrailerKeys);
         
-        delegate.getMovieTrailerKey(movieTrailerKey);
+        delegate.getMovieTrailerKey(movieTrailerKeys);
     }
 }

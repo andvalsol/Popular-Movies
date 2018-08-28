@@ -31,7 +31,7 @@ public class MovieNetworkDataSource {
         return setupHttConnection(reviewsRequestUrl);
     }
     
-    //This method could throw an IOException
+    // This method could throw an IOException
     public static String getMovieTrailerKey(int movieId) throws IOException {
         //Get the URL from the buildUrl method
         URL trailerRequestUrl = buildUrl(requestUrlForMovieTrailer(movieId));
