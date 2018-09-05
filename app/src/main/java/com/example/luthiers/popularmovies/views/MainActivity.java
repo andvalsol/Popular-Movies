@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,10 +34,18 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClicked {
     
-    private String mFilter; //Initialize the filter as most popular by default
+    private String mFilter, GRID_STATE_KEY = "gridStateKey";
+    
     private MovieViewModel mMovieViewModel;
+    
     private ImageButton mFab;
+    
     private ConstraintLayout mFiltersLayout;
+    
+    private GridLayoutManager mGridLayoutManager;
+    
+    private Parcelable mGridLayoutManagerState;
+    
     
     @Inject
     MoviesAdapter mMoviesAdapter;
@@ -84,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 //Set the property value for the filter since the user wants to get the movies he/she marked as favorite
                 mFilter = Constants.FAVORITE;
             }
-    
+            
             //Set the filter to the MovieViewModel
             mMovieViewModel.mFilter.setValue(mFilter);
             
@@ -98,11 +107,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         //Set the filter to be most popular as default
         mFilter = Constants.MOST_POPULAR;
         
+        // Initialize the mGridLayoutManager
+        mGridLayoutManager = new GridLayoutManager(this, setGridColumns());
+        
         //Initialize a recycler view
         RecyclerView recyclerView = findViewById(R.id.rv_movies);
         //The size of each item from the recycler view won't change, so set this value to be true, to let recycler view do some optimizations
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, setGridColumns()));
+        recyclerView.setLayoutManager(mGridLayoutManager);
         //Set the moviesAdapter to the recycler view
         recyclerView.setAdapter(mMoviesAdapter);
         
@@ -113,31 +125,56 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         //Listen to the movies gotten from the repository
         mMovieViewModel.getMoviesFromRepository().observe(this, movies -> {
             //We don't need to check if its loading, since initially we set the progress bar to be visible
-    
+            
+            if (movies != null) {
                 switch (movies.status) {
-                case SUCCESS:
-                    //Remove the progress bar since we got new data :)
-                    progressBar.setVisibility(View.GONE);
-            
-                    //Add the list to the movies adapter
-                    mMoviesAdapter.updateAdapter(movies.data);
-                    break;
-                case ERROR:
-                    //Check if the progress bar is still visible, if it is then remove it
-                    progressBar.setVisibility(View.GONE);
-            
-                    //Show a text to the user displaying the proper error message
-                    Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
-                    break;
-                default:
-                    //Should be loading
-                    progressBar.setVisibility(View.VISIBLE);
-                    break;
+                    case SUCCESS:
+                        //Remove the progress bar since we got new data :)
+                        progressBar.setVisibility(View.GONE);
+                        
+                        //Add the list to the movies adapter
+                        mMoviesAdapter.updateAdapter(movies.data);
+                        break;
+                    case ERROR:
+                        //Check if the progress bar is still visible, if it is then remove it
+                        progressBar.setVisibility(View.GONE);
+                        
+                        //Show a text to the user displaying the proper error message
+                        Toast.makeText(this, R.string.error_displaying_movies, Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        //Should be loading
+                        progressBar.setVisibility(View.VISIBLE);
+                        break;
+                }
             }
+            
+            mGridLayoutManager.onRestoreInstanceState(mGridLayoutManagerState);
         });
         
         //Set the periodic work request
         MovieNetworkFetching.scheduleMovieNetworkFetching();
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // Save the list state
+        mGridLayoutManagerState = mGridLayoutManager.onSaveInstanceState();
+        
+        // Add the list state into the outState variable
+        outState.putParcelable(GRID_STATE_KEY, mGridLayoutManagerState);
+        
+        super.onSaveInstanceState(outState);
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+        // Retrieve the list state
+        if (savedInstanceState != null) {
+            mGridLayoutManagerState = savedInstanceState.getParcelable(GRID_STATE_KEY);
+        }
     }
     
     private int setGridColumns() {

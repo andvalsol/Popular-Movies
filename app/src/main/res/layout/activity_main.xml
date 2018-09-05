@@ -36,8 +36,12 @@
         <!--We only need a recycler view-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movies"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appbar" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
